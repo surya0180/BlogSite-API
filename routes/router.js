@@ -8,4 +8,10 @@ router.get("/", function (req, res) {
 const userRoute = require("./user.route");
 router.use("/user", userRoute);
 
+const profileRoute = require("./profile.route");
+router.use("/profile", profileRoute);
+
+const authRoute = require("./auth.route");
+router.use("/auth", authRoute);
+
 module.exports = router;

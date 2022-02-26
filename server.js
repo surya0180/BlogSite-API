@@ -21,6 +21,7 @@ app.get("/ping", errorMiddleware, (req, res) => {
     });
 });
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(` ✨ API started at http://localhost:${port}/api/v1 🐢🐢`);
