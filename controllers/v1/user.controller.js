@@ -1,8 +1,9 @@
 const User = require("../../models/users.model");
+const userRepo = require("../../repositories/user.repository");
 
 const getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("-password");
+        const user = await userRepo.findUserById(req.user.id);
         return res.json({
             status: true,
             message: "User found successfully",
@@ -20,9 +21,7 @@ const getUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const userprofileid = await User.findOne({
-            _id: req.params.user_id,
-        });
+        const userprofileid = await userRepo.findUserById(req.params.user_id);
 
         if (!userprofileid) {
             return res.status(400).json({
