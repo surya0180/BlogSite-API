@@ -7,6 +7,8 @@ module.exports = function (req, res, next) {
         return res.status(401).json({
             status: false,
             message: "No token, authentication denied",
+            data: {},
+            errors: {},
         });
     }
 

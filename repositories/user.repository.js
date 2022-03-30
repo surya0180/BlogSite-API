@@ -39,9 +39,49 @@ const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
     );
 };
 
+const addFollower = async (userId, follow_userId) => {
+    await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                following: follow_userId,
+            },
+        }
+    );
+    await User.updateOne(
+        { _id: follow_userId },
+        {
+            $addToSet: {
+                followers: userId,
+            },
+        }
+    );
+};
+
+const removeFollower = async (userId, follow_userId) => {
+    await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                following: follow_userId,
+            },
+        }
+    );
+    await User.updateOne(
+        { _id: follow_userId },
+        {
+            $pull: {
+                followers: userId,
+            },
+        }
+    );
+};
+
 module.exports = {
     findUserByEmail,
     findUserById,
     addUser,
     updateUserById,
+    addFollower,
+    removeFollower,
 };
