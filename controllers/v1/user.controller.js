@@ -22,6 +22,7 @@ const getUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
+        console.log(req.params.user_id);
         const userprofileid = await userRepo.findUserById(req.params.user_id);
 
         if (!userprofileid) {
