@@ -26,7 +26,7 @@ const register = async (firstname, lastname, email, password) => {
                 status: false,
                 message: "User already exists",
                 data: {},
-                errors: user,
+                errors: {},
             };
         }
 
