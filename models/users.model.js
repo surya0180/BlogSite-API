@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-    name: {
+    firstname: {
+        type: String,
+        required: true,
+    },
+    lastname: {
         type: String,
         required: true,
     },
@@ -9,6 +13,24 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    password: {
+        type: String,
+        required: true,
+    },
+    bio: {
+        type: String,
+        required: false,
+    },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    genres: {
+        type: Array,
+    },
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
+    questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "question" }],
+    recents: [{ type: mongoose.Schema.Types.ObjectId, ref: "activity" }],
+    liked: [{ type: mongoose.Schema.Types.ObjectId, ref: "activity" }],
+    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: "activity" }],
 });
 
 module.exports = mongoose.model("user", userSchema);
