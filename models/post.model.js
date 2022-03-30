@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const questionSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
     author: {
         type: String,
         required: true,
@@ -22,11 +22,11 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    screenshot: {
+    banner: {
         type: String,
-        required: false,
+        required: true,
     },
-    up_votes: {
+    likes: {
         type: Number,
         required: true,
     },
@@ -34,11 +34,8 @@ const questionSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    status: {
-        type: Boolean,
-        required: true,
-    },
-    answers: [{ type: mongoose.Schema.Types.ObjectId, ref: "answer" }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
+    cells: [{ type: mongoose.Schema.Types.ObjectId, ref: "postcell" }],
 });
 
-module.exports = mongoose.model("question", questionSchema);
+module.exports = mongoose.model("post", postSchema);

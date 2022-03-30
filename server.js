@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const { errorMiddleware } = require("./middlewares/error.middleware");
 const router = require("./routes/router");
 
+const session = require("express-session");
+
 require("./config/mongo.connection");
 
 const app = express();
@@ -12,6 +14,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
+);
 
 app.use("/api/v1", router);
 
