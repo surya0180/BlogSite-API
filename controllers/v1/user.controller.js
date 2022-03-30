@@ -1,4 +1,3 @@
-const User = require("../../models/users.model");
 const userRepo = require("../../repositories/user.repository");
 
 const getUser = async (req, res) => {
@@ -47,7 +46,37 @@ const getUserById = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.email !== undefined && body.uid !== undefined) {
+            const response = await userRepo.updateUserById(
+                body.uid,
+                body.firstname,
+                body.lastname,
+                body.email,
+                body.bio,
+                body.genres
+            );
+            return res.status(200).json({
+                status: true,
+                message: "User profile updated successfully",
+                data: response,
+                errors: {},
+            });
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: { msg: "Missing parameters" },
+            });
+        }
+    } catch (error) {}
+};
+
 module.exports = {
     getUser,
     getUserById,
+    updateUser,
 };

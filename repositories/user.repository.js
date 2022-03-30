@@ -22,8 +22,26 @@ const addUser = async (firstname, lastname, email, password) => {
     }
 };
 
+const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
+    return await User.updateOne(
+        { _id: uid },
+        {
+            $set: {
+                firstname,
+                lastname,
+                email,
+                bio,
+            },
+            $addToSet: {
+                genres,
+            },
+        }
+    );
+};
+
 module.exports = {
     findUserByEmail,
     findUserById,
     addUser,
+    updateUserById,
 };
