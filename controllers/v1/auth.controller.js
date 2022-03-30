@@ -22,11 +22,10 @@ const login = async (req, res) => {
                 errors: {},
             });
         }
-        res.setHeader("Set-Cookie", `token=${authToken}; Secure`);
         return res.status(200).json({
             status: true,
             message: "Logged in Successfully",
-            data: {},
+            data: authToken,
             error: {},
         });
     } catch (err) {
@@ -57,7 +56,6 @@ const register = async (req, res) => {
             body.email,
             body.password
         );
-        res.setHeader("Set-Cookie", `token=${response.data}; Secure`);
         return res.status(200).json(response);
     } catch (err) {
         res.status(500).json({
