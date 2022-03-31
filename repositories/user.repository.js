@@ -44,6 +44,28 @@ const addQuestionIdToUser = async (userId, questionId) => {
     );
 };
 
+const deletePostIdFromUser = async (userId, postId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                posts: postId,
+            },
+        }
+    );
+};
+
+const deleteQuestionIdFromUser = async (userId, questionId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                questions: questionId,
+            },
+        }
+    );
+};
+
 const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
     return await User.updateOne(
         { _id: uid },
@@ -108,4 +130,6 @@ module.exports = {
     removeFollower,
     addPostIdToUser,
     addQuestionIdToUser,
+    deletePostIdFromUser,
+    deleteQuestionIdFromUser,
 };

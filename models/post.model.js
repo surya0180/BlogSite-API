@@ -30,14 +30,8 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    likes: {
-        type: Number,
-        default: 0,
-    },
-    bookmarks: {
-        type: Number,
-        default: 0,
-    },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
     cells: {
         type: Array,

@@ -35,6 +35,7 @@ const createPost = async (userId, title, summary, genre, banner, cells) => {
             banner,
             cells
         );
+        await userRepo.addPostIdToUser(userId, post._id);
         return {
             status: true,
             message: "Post created successfully",
@@ -91,6 +92,7 @@ const updatePost = async (postId, title, summary, genre, banner, cells) => {
 const deletePost = async (postId, userId) => {
     try {
         const response = await postRepo.deletePost(postId, userId);
+        await userRepo.deletePostIdFromUser(userId, postId);
         return {
             status: true,
             message: "Post deleted successfully",
