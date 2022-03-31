@@ -5,8 +5,6 @@ const bodyParser = require("body-parser");
 const { errorMiddleware } = require("./middlewares/error.middleware");
 const router = require("./routes/router");
 
-const session = require("express-session");
-
 require("./config/mongo.connection");
 
 const app = express();
