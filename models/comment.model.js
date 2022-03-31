@@ -14,15 +14,14 @@ const commentModel = new mongoose.Schema({
         type: String,
         required: true,
     },
-    postid: {
+    postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "post",
         default: null,
     },
-    questionid: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "question",
-        default: null,
+    is_active: {
+        type: Boolean,
+        default: true,
     },
 });
 

@@ -70,6 +70,28 @@ const findPostsByUserId = async (userId) => {
     return await Post.find({ userId });
 };
 
+const addCommentToPost = async (postId, commentId) => {
+    return await Post.updateOne(
+        { _id: postId },
+        {
+            $addToSet: {
+                comments: commentId,
+            },
+        }
+    );
+};
+
+const deleteCommentInPost = async (postId, commentId) => {
+    return await Post.updateOne(
+        { _id: postId },
+        {
+            $pull: {
+                comments: commentId,
+            },
+        }
+    );
+};
+
 module.exports = {
     addPost,
     updatePost,
@@ -77,4 +99,6 @@ module.exports = {
     findAllPosts,
     findPostByPostId,
     findPostsByUserId,
+    addCommentToPost,
+    deleteCommentInPost,
 };
