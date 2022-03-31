@@ -5,7 +5,11 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    is_active: {
+        type: Boolean,
+        default: true,
+    },
     title: {
         type: String,
         required: true,
@@ -24,18 +28,22 @@ const postSchema = new mongoose.Schema({
     },
     banner: {
         type: String,
-        required: true,
+        required: false,
     },
     likes: {
         type: Number,
-        required: true,
+        default: 0,
     },
     bookmarks: {
         type: Number,
-        required: true,
+        default: 0,
     },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
-    cells: [{ type: mongoose.Schema.Types.ObjectId, ref: "postcell" }],
+    cells: {
+        type: Array,
+        required: false,
+        default: [],
+    },
 });
 
 module.exports = mongoose.model("post", postSchema);
