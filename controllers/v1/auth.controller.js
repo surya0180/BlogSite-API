@@ -1,7 +1,4 @@
 const { validationResult } = require("express-validator");
-const User = require("../../models/users.model");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const authService = require("../../services/auth.service");
 
 const login = async (req, res) => {
@@ -25,11 +22,10 @@ const login = async (req, res) => {
                 errors: {},
             });
         }
-        res.setHeader("Set-Cookie", `token=${authToken}; Secure`);
         return res.status(200).json({
             status: true,
             message: "Logged in Successfully",
-            data: {},
+            data: authToken,
             error: {},
         });
     } catch (err) {
@@ -60,13 +56,7 @@ const register = async (req, res) => {
             body.email,
             body.password
         );
-        res.setHeader("Set-Cookie", `token=${response.token}; Secure`);
-        return res.status(200).json({
-            status: true,
-            message: "Registered user successfully",
-            data: response.user,
-            errors: {},
-        });
+        return res.status(200).json(response);
     } catch (err) {
         res.status(500).json({
             status: false,

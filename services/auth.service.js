@@ -26,7 +26,7 @@ const register = async (firstname, lastname, email, password) => {
                 status: false,
                 message: "User already exists",
                 data: {},
-                errors: user,
+                errors: {},
             };
         }
 
@@ -39,8 +39,10 @@ const register = async (firstname, lastname, email, password) => {
         );
         const token = createJWT(newUser);
         return {
-            token,
-            user: newUser,
+            status: true,
+            message: "Registered user successfully",
+            data: token,
+            errors: {},
         };
     } catch (error) {
         throw error;
