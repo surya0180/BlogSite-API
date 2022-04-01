@@ -1,0 +1,497 @@
+openapi : 3.0.0
+
+info: 
+    title : 'BlogSite API'
+    version : '1.0.0'
+    description : 'BlogSite API'
+
+servers : 
+    - url : http://localhost:5000/api/v1
+
+paths:
+
+    /auth/register: 
+        post:
+          summary: "Path for creating a user"
+          tags:
+            - "Auth"
+          requestBody:
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/User'
+
+          responses:
+              '200': 
+                  description: "User created Successfully"
+                  content:
+                    application/json:
+                        schema:
+                          items:
+                            $ref: '#/components/schemas/User'
+            
+    /auth/login: 
+        post:
+          summary: "Login a User"
+          tags:
+            - "Auth"
+          requestBody:
+            required: true
+            content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                        email:          
+                           type: string
+                        password:    
+                           type: string
+                    required:
+                            - email
+                            - password
+
+          responses:
+            '200':
+                description: "User login successful"
+
+    # path for getting all user profile details
+    /user/get_user: 
+        get: 
+          summary: 'Gets all user profile details'
+          tags:
+              - profile
+          parameters: 
+                - in: header
+                  name: authorization
+                  schema:
+                    type: string
+                  required: true
+          responses: 
+              '200':
+                  description: 'Fetching All user profile details'
+                 
+                  
+
+    #path for updating user details by using user id                             
+    /update_user/{user_id}: 
+          post:
+            summary: 'Profile update endpoint: Updates the user details and returns appropriate status'
+            operationId: updateUser
+            tags:
+                - user
+                - profile
+            parameters: 
+                - in: header
+                  name: Authorization
+                  schema:
+                    type: string
+                  required: true
+
+            responses:
+                '200':
+                    description: 'Sample response: Details about a user by ID'
+                    headers:
+                        x-next:
+                            description: A link to the next page of responses
+                            schema:
+                                type: string
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+    
+    #get user profiles by using user id
+    /user/get_user/{user_id}:   
+        get: 
+          summary : 'Gets user profile by user ID'
+          tags: 
+            - profile
+          parameters: 
+              - in : path
+                name : user_id
+                required : true
+                schema: 
+                  type : string
+                  
+          responses: 
+              '200': 
+                  description: 'User profile Details by user ID'
+                  content: 
+                      application/json:
+                          schema: 
+                            $ref: '#/components/schemas/User'
+
+    #Creating a post using postId
+    /user/{id}/post: 
+        post: 
+          summary : 'Creating post using userId'
+          tags : 
+            - post
+            - user
+          parameters: 
+              - in : path
+                name : id
+                required : true
+                schema: 
+                  type : string
+          requestBody: 
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/Post'
+          responses: 
+              '200': 
+                  description: 'Post Created Succesfully'
+                  
+    /user/post/{id}:
+        #deleting a post by using postId 
+        delete: 
+          summary: 'Delete a Post by using postId'
+          tags : 
+            - post
+          parameters: 
+              - in : path
+                name : id
+                required : true
+                schema: 
+                  type : string
+                  
+          responses: 
+              '200': 
+                  description: 'Post Data deleted succesfully'
+                  
+        #Updating post details by using postId
+        put: 
+          summary: 'Update Post Details'
+          tags : 
+            - post
+          parameters :
+            - in : path
+              name: id
+              required: true
+              schema: 
+                type: string
+          requestBody: 
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/Post'
+          responses: 
+              '200': 
+                  description: 'Post Details Updated Successfully'
+                  
+    #Creating a question by using userId
+    /user/{id}/question:
+        post: 
+          summary : 'Creating a question using userId'
+          tags : 
+            - question
+            - user
+          parameters: 
+              - in : path
+                name : id
+                required : true
+                schema: 
+                  type : string
+          requestBody: 
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/Question'
+          responses: 
+              '200': 
+                  description: 'Question Added Succesfully'
+            
+    
+    /user/question/{id}: 
+        #Deleting a question by using questionId
+        delete: 
+          summary: 'Delete a question by using questionId'
+          tags : 
+            - question
+          parameters: 
+              - in : path
+                name : id
+                required : true
+                schema: 
+                  type : string
+                  
+          responses: 
+              '200': 
+                  description: 'Question Data deleted succesfully'
+
+        #Deleting a question by using questionId         
+        put: 
+          summary: 'Update Question Details'
+          tags : 
+            - question
+          parameters :
+            - in : path
+              name: id
+              required: true
+              schema: 
+                type: string
+          requestBody: 
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/Question'
+          responses: 
+              '200': 
+                  description: 'Question Details Updated Successfully'
+
+   
+    /post/{post_id}:
+     #Adding a comment to the post
+        post: 
+            summary: "Add a comment to the post"
+            tags:
+              - "post"
+            parameters :
+            - in : path
+              name: post_id
+              required: true
+              schema: 
+                type: string
+            requestBody: 
+              required: true
+              content: 
+                application/json:
+                  schema: 
+                    $ref: '#/components/schemas/Comment'
+            responses: 
+              '200': 
+                  description: 'Comment added to the post successfully'
+
+      #Deleting the comment from the post using postId
+    /post/{comment_id}:    
+            delete: 
+              summary: "Delete a comment from the post"
+              tags:
+              - "post"
+              parameters :
+                - in : path
+                  name: post_id
+                  required: true
+                  schema: 
+                    type: string
+              responses: 
+                '200': 
+                  description: 'Comment Deleted from the post successfully'
+    
+    /question/{question_id}: 
+          #Adding an answer to the question 
+          post: 
+            summary: "Add an answer to the question"
+            tags:
+              - "question"
+            parameters :
+            - in : path
+              name: question_id
+              required: true
+              schema: 
+                type: string
+            requestBody: 
+              required: true
+              content: 
+                application/json:
+                  schema: 
+                    $ref: '#/components/schemas/Answer'
+            responses: 
+              '200': 
+                  description: 'Answer added to the question successfully'
+          
+          
+          #deleting an answer from the question
+    /question/{answer_id}:
+            delete: 
+              summary: "Delete an answer from the question"
+              tags:
+              - "question"
+              parameters :
+                - in : path
+                  name: answer_id
+                  required: true
+                  schema: 
+                    type: string
+              responses: 
+                '200': 
+                  description: 'Answer Deleted from the question successfully'
+   
+    #Adding likes to a post
+    /post/like/{post_id}:
+          post:
+            summary: "Add a like to the post"
+            tags:
+              - post
+            parameters:
+              - in : path
+                name: post_id
+                required: true
+                schema: 
+                  type: string
+            responses:
+                '200':
+                  description: 'Added a like to the post successfully'
+
+    #Adding an upvote to the question
+    /question/like/{question_id}:
+          post:
+            summary: "Add an upvote to the question"
+            tags:
+              - question
+            parameters:
+              - in : path
+                name: question_id
+                required: true
+                schema: 
+                  type: string
+            responses:
+                '200':
+                  description: 'Added an upvote to the question successfully'
+
+    #Adding a Bookmark to the post
+    /post/bookmark/{post_id}: 
+          post: 
+            summary: 'Add a Bookmark to the post'
+            tags: 
+              - post
+            parameters:
+              - in : path
+                name : post_id
+                required: true
+                schema:
+                  type: string
+            responses:
+                  '200':
+                      description: 'Added a bookmark!!!'  
+
+            
+
+
+
+components:
+    schemas:
+        User:
+            type: object
+            required:
+                - id
+                - email
+            properties:
+                id:
+                    type: string
+                firstname:
+                    type: string
+                lastname:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+        Post:
+            type: object
+            required:
+                - author
+                - id
+                - userId
+            properties:
+                author:
+                    type: string
+                userId:
+                    type: string
+                postId: 
+                    type: string
+                postTitle:
+                    type: string
+                postSummary:
+                    type: string
+                postGenre:
+                    type: string
+                publishedDate:
+                    type: string
+                banner:
+                    type: string
+                likes: 
+                    type: integer
+                    format: int32
+                bookmarks: 
+                    type: integer
+                    format: int32
+                comments: 
+                    type: array
+                    items:
+                      type: object
+                postData:
+                    type: array
+                    items:
+                      type: object
+        Question:
+            type: object
+            required:
+                - author
+                - id
+                - userId
+            properties:
+                author:
+                    type: string
+                userId:
+                    type: string
+                questionId: 
+                    type: string
+                questionTitle:
+                    type: string
+                questionDescription:
+                    type: string
+                questionGenre:
+                    type: string
+                publishedDate:
+                    type: string
+                screenshot:
+                    type: string
+                likes: 
+                    type: integer
+                    format: int32
+                bookmarks: 
+                    type: integer
+                    format: int32
+                replies: 
+                    type: array
+                    items:
+                      type: object
+
+        Comment:
+            type: object
+            required: 
+                - postId
+                - description
+            properties: 
+                  postId: 
+                    type: string
+                  commentId: 
+                    type: string
+                  description: 
+                    type: string
+
+        Answer:
+            type: object
+            required:
+              - questionId
+              - answer
+            properties:
+              questionId:
+                type: string
+              answerId: 
+                type: string
+              answer:
+                type: string
+         
+   
+      
+
+security:
+  - BasicAuth: []
