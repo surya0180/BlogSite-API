@@ -5,13 +5,31 @@ const { createJWT, encryptPassword } = require("../utils/common");
 const login = async (email, password) => {
     try {
         const user = await userRepo.findUserByEmail(email);
+        if (!user) {
+            return {
+                status: false,
+                message: "User does not exists!",
+                data: {},
+                errors: user,
+            };
+        }
         const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!user || !passwordMatch) {
-            return false;
+        if (!passwordMatch) {
+            return {
+                status: false,
+                message: "Invalid credentials!",
+                data: {},
+                errors: passwordMatch,
+            };
         }
 
         const token = createJWT(user);
-        return token;
+        return {
+            status: true,
+            message: "Logged In successfully",
+            data: token,
+            errors: {},
+        };
     } catch (error) {
         throw error;
     }

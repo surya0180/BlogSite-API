@@ -13,21 +13,11 @@ const login = async (req, res) => {
             });
         }
         const body = req.body;
-        const authToken = await authService.login(body.email, body.password);
-        if (!authToken) {
-            return res.status(400).json({
-                status: false,
-                message: "Invalid Credentials",
-                data: {},
-                errors: {},
-            });
-        }
-        return res.status(200).json({
-            status: true,
-            message: "Logged in Successfully",
-            data: authToken,
-            error: {},
-        });
+        const loginResponse = await authService.login(
+            body.email,
+            body.password
+        );
+        return res.status(200).json(loginResponse);
     } catch (err) {
         return res.status(500).json({
             status: false,
