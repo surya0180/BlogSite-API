@@ -61,22 +61,15 @@ paths:
           summary: 'Gets all user profile details'
           tags:
               - profile
-          security:
-            - bearerAuth: []
-          # parameters: 
-          #       - in: header
-          #         name: authorization
-          #         schema:
-          #           type: string
-          #         required: true
           responses: 
               '200':
                   description: 'Fetching All user profile details'
                  
                   
 
-    #path for updating user details by using user id                             
-    /update_user/: 
+    #path for updating user details by using user id
+    #Should update this!!!!                             
+    /user/update_user: 
           put:
             summary: 'Profile update endpoint: Updates the user details and returns appropriate status'
             operationId: updateUser
@@ -130,254 +123,128 @@ paths:
                           schema: 
                             $ref: '#/components/schemas/User'
 
-    #Creating a post using postId
-    /user/{id}/post: 
-        post: 
-          summary : 'Creating post using userId'
-          tags : 
-            - post
-            - user
-          parameters: 
-              - in : path
-                name : id
-                required : true
-                schema: 
-                  type : string
-          requestBody: 
-            required: true
-            content: 
-              application/json:
-                schema: 
-                  $ref: '#/components/schemas/Post'
-          responses: 
-              '200': 
-                  description: 'Post Created Succesfully'
-                  
-    /user/post/{id}:
-        #deleting a post by using postId 
-        delete: 
-          summary: 'Delete a Post by using postId'
-          tags : 
-            - post
-          parameters: 
-              - in : path
-                name : id
-                required : true
-                schema: 
-                  type : string
-                  
-          responses: 
-              '200': 
-                  description: 'Post Data deleted succesfully'
-                  
-        #Updating post details by using postId
-        put: 
-          summary: 'Update Post Details'
-          tags : 
-            - post
-          parameters :
-            - in : path
-              name: id
-              required: true
+    
+
+    /post/get_all_posts:
+        get:
+          summary: "Get all post details from the database"
+          tags:
+            - "post"
+          responses:
+              '200':
+                  description: "All posts details"
+                  content: 
+                      application/json:
+                          schema: 
+                            $ref: '#/components/schemas/Post'
+    
+    #Should update this!!!
+    /post/get_posts:
+        get:
+          summary: "Get post details by using UserId"
+          parameters:
+            - in : header
+              name: authorization
               schema: 
-                type: string
-          requestBody: 
-            required: true
-            content: 
-              application/json:
-                schema: 
-                  $ref: '#/components/schemas/Post'
-          responses: 
+                type: string 
+          requestBody:
+              required: true
+              content:
+                application/json:
+                    schema:
+                      type: object 
+                      properties:
+                          userId:
+                            type: string
+
+
+
+          responses:
               '200': 
-                  description: 'Post Details Updated Successfully'
-                  
-    #Creating a question by using userId
-    /user/{id}/question:
-        post: 
-          summary : 'Creating a question using userId'
-          tags : 
-            - question
-            - user
-          parameters: 
+                  description: "Fetched post details by using userId"
+                  content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Post'
+
+    /post/get_post/{postId}:
+          get:
+            summary: "Get post by using post id"
+            parameters:
               - in : path
-                name : id
-                required : true
+                name: postId
                 schema: 
-                  type : string
-          requestBody: 
+                    type: string
+                required: true
+            responses:
+                '200': 
+                    description: "Fetched Post details by using PostID"
+                    content:
+                        application/json:
+                            schema: 
+                                $ref: "#/components/schemas/Post"
+
+    /post/create_post:
+        post:
+            summary: "Create a post"
+            requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/Post"
+
+            responses:
+                '200' : 
+                    description: "Post Created Successfully"  
+
+    /post/update_post:
+        post:
+          summary: "Update your post details"
+          requestBody:
             required: true
-            content: 
+            content:
               application/json:
                 schema: 
-                  $ref: '#/components/schemas/Question'
-          responses: 
-              '200': 
-                  description: 'Question Added Succesfully'
+                  type: object
+                  properties:
+                    postId: 
+                      type: string
+                    title : 
+                      type: string
+                    summary:
+                      type: string
+                    genre:
+                      type: string
+                    cells:
+                      type: array
+                      default: []
+          responses:
+              '200' : 
+                  description: "Post Details updated sucessfully"  
+
+    /post/delete_post:
+        delete:
+            summary: "Delete a post by using userId and postId"
+            requestBody:
+                required: true
+                content:
+                  application/json:
+                      schema: 
+                        type: object
+                        properties:
+                          postId:
+                            type: string
+                          userId:
+                            type: string
+            responses:
+                '200':
+                  description: "Deleted the post succesfully"          
+
+   
             
     
-    /user/question/{id}: 
-        #Deleting a question by using questionId
-        delete: 
-          summary: 'Delete a question by using questionId'
-          tags : 
-            - question
-          parameters: 
-              - in : path
-                name : id
-                required : true
-                schema: 
-                  type : string
-                  
-          responses: 
-              '200': 
-                  description: 'Question Data deleted succesfully'
-
-        #Deleting a question by using questionId         
-        put: 
-          summary: 'Update Question Details'
-          tags : 
-            - question
-          parameters :
-            - in : path
-              name: id
-              required: true
-              schema: 
-                type: string
-          requestBody: 
-            required: true
-            content: 
-              application/json:
-                schema: 
-                  $ref: '#/components/schemas/Question'
-          responses: 
-              '200': 
-                  description: 'Question Details Updated Successfully'
-
-   
-    /post/{post_id}:
-     #Adding a comment to the post
-        post: 
-            summary: "Add a comment to the post"
-            tags:
-              - "post"
-            parameters :
-            - in : path
-              name: post_id
-              required: true
-              schema: 
-                type: string
-            requestBody: 
-              required: true
-              content: 
-                application/json:
-                  schema: 
-                    $ref: '#/components/schemas/Comment'
-            responses: 
-              '200': 
-                  description: 'Comment added to the post successfully'
-
-      #Deleting the comment from the post using postId
-    /post/{comment_id}:    
-            delete: 
-              summary: "Delete a comment from the post"
-              tags:
-              - "post"
-              parameters :
-                - in : path
-                  name: post_id
-                  required: true
-                  schema: 
-                    type: string
-              responses: 
-                '200': 
-                  description: 'Comment Deleted from the post successfully'
     
-    /question/{question_id}: 
-          #Adding an answer to the question 
-          post: 
-            summary: "Add an answer to the question"
-            tags:
-              - "question"
-            parameters :
-            - in : path
-              name: question_id
-              required: true
-              schema: 
-                type: string
-            requestBody: 
-              required: true
-              content: 
-                application/json:
-                  schema: 
-                    $ref: '#/components/schemas/Answer'
-            responses: 
-              '200': 
-                  description: 'Answer added to the question successfully'
-          
-          
-          #deleting an answer from the question
-    /question/{answer_id}:
-            delete: 
-              summary: "Delete an answer from the question"
-              tags:
-              - "question"
-              parameters :
-                - in : path
-                  name: answer_id
-                  required: true
-                  schema: 
-                    type: string
-              responses: 
-                '200': 
-                  description: 'Answer Deleted from the question successfully'
-   
-    #Adding likes to a post
-    /post/like/{post_id}:
-          post:
-            summary: "Add a like to the post"
-            tags:
-              - post
-            parameters:
-              - in : path
-                name: post_id
-                required: true
-                schema: 
-                  type: string
-            responses:
-                '200':
-                  description: 'Added a like to the post successfully'
-
-    #Adding an upvote to the question
-    /question/like/{question_id}:
-          post:
-            summary: "Add an upvote to the question"
-            tags:
-              - question
-            parameters:
-              - in : path
-                name: question_id
-                required: true
-                schema: 
-                  type: string
-            responses:
-                '200':
-                  description: 'Added an upvote to the question successfully'
-
-    #Adding a Bookmark to the post
-    /post/bookmark/{post_id}: 
-          post: 
-            summary: 'Add a Bookmark to the post'
-            tags: 
-              - post
-            parameters:
-              - in : path
-                name : post_id
-                required: true
-                schema:
-                  type: string
-            responses:
-                  '200':
-                      description: 'Added a bookmark!!!'  
 
             
 
@@ -401,43 +268,58 @@ components:
                     type: string
                 password:
                     type: string
+                bio: 
+                    type: string
+                followers: 
+                    type: array
+                    items: 
+                      type: object
+                following:
+                    type: array
+                    items: 
+                      type: object
+                genres: 
+                    type: array
+                    items:
+                      type: object
+
+        Profile: 
+            type: object
+            properties:
+                id:
+                    type: string
+                firstname:
+                    type: string
+                lastname:
+                    type: string
+                email:
+                    type: string
+                bio: 
+                    type: string
+                genres: 
+                    type: array
+                    items:
+                      type: object
+                
         Post:
             type: object
-            required:
-                - author
-                - id
-                - userId
             properties:
-                author:
-                    type: string
                 userId:
                     type: string
-                postId: 
+                title:
                     type: string
-                postTitle:
+                summary:
                     type: string
-                postSummary:
-                    type: string
-                postGenre:
-                    type: string
-                publishedDate:
+                genre:
                     type: string
                 banner:
                     type: string
-                likes: 
-                    type: integer
-                    format: int32
-                bookmarks: 
-                    type: integer
-                    format: int32
-                comments: 
+                cells:
                     type: array
-                    items:
-                      type: object
-                postData:
-                    type: array
-                    items:
-                      type: object
+                    default : []
+                    
+                    
+                    
         Question:
             type: object
             required:
