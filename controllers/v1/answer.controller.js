@@ -1,147 +1,10 @@
-const questionService = require("../../services/question.service");
+const answerService = require("../../services/answer.service");
 
-const createQuestion = async (req, res) => {
-    try {
-        const body = req.body;
-        if (
-            body.userId !== undefined &&
-            body.title !== undefined &&
-            body.summary !== undefined &&
-            body.genre !== undefined
-        ) {
-            const response = await questionService.createQuestion(
-                body.userId,
-                body.title,
-                body.summary,
-                body.genre,
-                body.screenshot
-            );
-            return res.status(200).json(response);
-        } else {
-            return res.status(422).json({
-                status: false,
-                message: "Missing parameters",
-                data: {},
-                errors: {},
-            });
-        }
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Internal server error",
-            data: {},
-            errors: error.message,
-        });
-    }
-};
-
-const updateQuestion = async (req, res) => {
-    try {
-        const body = req.body;
-        if (
-            body.questionId !== undefined &&
-            body.title !== undefined &&
-            body.summary !== undefined &&
-            body.genre !== undefined
-        ) {
-            const response = await questionService.updateQuestion(
-                body.questionId,
-                body.title,
-                body.summary,
-                body.genre,
-                body.screenshot
-            );
-            return res.status(200).json(response);
-        } else {
-            return res.status(422).json({
-                status: false,
-                message: "Missing parameters",
-                data: {},
-                errors: {},
-            });
-        }
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Internal server error",
-            data: {},
-            errors: error.message,
-        });
-    }
-};
-
-const deleteQuestion = async (req, res) => {
-    try {
-        const body = req.body;
-        if (body.questionId !== undefined && body.userId) {
-            const response = await questionService.deleteQuestion(
-                body.questionId,
-                body.userId
-            );
-            return res.status(200).json(response);
-        } else {
-            return res.status(422).json({
-                status: false,
-                message: "Missing parameters",
-                data: {},
-                errors: {},
-            });
-        }
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Internal server error",
-            data: {},
-            errors: error.message,
-        });
-    }
-};
-
-const getQuestions = async (req, res) => {
-    try {
-        const response = await questionService.getQuestions();
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Internal server error",
-            data: {},
-            errors: error.message,
-        });
-    }
-};
-
-const getQuestionsByUserId = async (req, res) => {
-    try {
-        const body = req.body;
-        if (body.userId !== undefined) {
-            const response = await questionService.getQuestionsByUserId(
-                body.userId
-            );
-            return res.status(200).json(response);
-        } else {
-            return res.status(422).json({
-                status: false,
-                message: "Missing parameters",
-                data: {},
-                errors: {},
-            });
-        }
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Internal Server error",
-            data: {},
-            errors: {},
-        });
-    }
-};
-
-const getQuestionByQuestionId = async (req, res) => {
+const getAnswersOfQuestion = async (req, res) => {
     try {
         const questionId = req.params.questionId;
         if (questionId !== undefined) {
-            const response = await questionService.getQuestionByQuestionId(
+            const response = await answerService.getAnswersOfQuestion(
                 questionId
             );
             return res.status(200).json(response);
@@ -163,34 +26,98 @@ const getQuestionByQuestionId = async (req, res) => {
     }
 };
 
-const upVoteAQuestion = async (req, res) => {
+const addAnswer = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && body.userId !== undefined) {
-            const response = await questionService.upVoteAQuestion(
+        if (
+            body.questionId !== undefined &&
+            body.userId !== undefined &&
+            body.text !== undefined
+        ) {
+            const response = await answerService.addAnswer(
+                body.userId,
                 body.questionId,
-                body.userId
+                body.text
             );
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
                 status: false,
-                message: "Missing parameters",
+                message: "Missing parameteres",
                 data: {},
                 errors: {},
             });
         }
     } catch (error) {
-        throw error;
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
     }
 };
 
-const downVoteAQuestion = async (req, res) => {
+const editAnswer = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && body.userId !== undefined) {
-            const response = await questionService.downVoteAQuestion(
+        if (body.text !== undefined && body.answerId !== undefined) {
+            const response = await answerService.editAnswer(
+                body.text,
+                body.answerId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
+    }
+};
+
+const deleteAnswer = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.answerId !== undefined && body.questionId !== undefined) {
+            const response = await answerService.deleteAnswer(
                 body.questionId,
+                body.answerId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
+    }
+};
+
+const addVoteToAnswer = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.userId !== undefined && body.answerId !== undefined) {
+            const response = await answerService.addVoteToAnswer(
+                body.answerId,
                 body.userId
             );
             return res.status(200).json(response);
@@ -203,17 +130,101 @@ const downVoteAQuestion = async (req, res) => {
             });
         }
     } catch (error) {
-        throw error;
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
+    }
+};
+
+const removeVoteToAnswer = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.userId !== undefined && body.answerId !== undefined) {
+            const response = await answerService.removeVoteToAnswer(
+                body.answerId,
+                body.userId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
+    }
+};
+
+const markAnswerAsCorrect = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.answerId !== undefined) {
+            const response = await answerService.markAnswerAsCorrect(
+                body.answerId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
+    }
+};
+
+const markAnswerAsWrong = async (req, res) => {
+    try {
+        const body = req.body;
+        if (body.answerId !== undefined) {
+            const response = await answerService.markAnswerAsWrong(
+                body.answerId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: {},
+        });
     }
 };
 
 module.exports = {
-    createQuestion,
-    updateQuestion,
-    deleteQuestion,
-    getQuestions,
-    getQuestionsByUserId,
-    getQuestionByQuestionId,
-    upVoteAQuestion,
-    downVoteAQuestion,
+    getAnswersOfQuestion,
+    addAnswer,
+    editAnswer,
+    deleteAnswer,
+    addVoteToAnswer,
+    removeVoteToAnswer,
+    markAnswerAsCorrect,
+    markAnswerAsWrong,
 };

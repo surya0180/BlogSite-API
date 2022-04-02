@@ -118,6 +118,39 @@ const getQuestionByQuestionId = async (questionsId) => {
     }
 };
 
+const upVoteAQuestion = async (questionId, userId) => {
+    try {
+        const question = await questionsRepo.upVoteAQuestion(
+            questionId,
+            userId
+        );
+        return {
+            status: true,
+            message: "Up voted user successfully",
+            data: question,
+            errors: {},
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+const downVoteAQuestion = async (questionId, userId) => {
+    try {
+        const question = await questionsRepo.downVoteAQuestion(
+            questionId,
+            userId
+        );
+        return {
+            status: true,
+            message: "Down voted user successfully",
+            data: question,
+            errors: {},
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     createQuestion,
     updateQuestion,
@@ -125,4 +158,6 @@ module.exports = {
     getQuestions,
     getQuestionsByUserId,
     getQuestionByQuestionId,
+    upVoteAQuestion,
+    downVoteAQuestion,
 };
