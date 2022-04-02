@@ -7,6 +7,7 @@ const postRoute = require("./api/v1/post.route");
 const questionRoute = require("./api/v1/question.route");
 const commentRoute = require("./api/v1/comment.route");
 const answerRoute = require("./api/v1/answer.route");
+const activityRoute = require("./api/v1/activity.route");
 
 router.get("/", function (req, res) {
     res.status(200).send({ message: "API is doing great 🐢." });
@@ -18,5 +19,6 @@ router.use("/post", postRoute);
 router.use("/question", questionRoute);
 router.use("/comment", commentRoute);
 router.use("/answer", answerRoute);
+router.use("/activity", activityRoute);
 
 module.exports = router;
