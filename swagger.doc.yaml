@@ -61,12 +61,14 @@ paths:
           summary: 'Gets all user profile details'
           tags:
               - profile
-          parameters: 
-                - in: header
-                  name: authorization
-                  schema:
-                    type: string
-                  required: true
+          security:
+            - bearerAuth: []
+          # parameters: 
+          #       - in: header
+          #         name: authorization
+          #         schema:
+          #           type: string
+          #         required: true
           responses: 
               '200':
                   description: 'Fetching All user profile details'
@@ -74,8 +76,8 @@ paths:
                   
 
     #path for updating user details by using user id                             
-    /update_user/{user_id}: 
-          post:
+    /update_user/: 
+          put:
             summary: 'Profile update endpoint: Updates the user details and returns appropriate status'
             operationId: updateUser
             tags:
@@ -87,7 +89,13 @@ paths:
                   schema:
                     type: string
                   required: true
-
+            requestBody:
+                 required: true
+                 content: 
+                    application/json:
+                       schema: 
+                         $ref: '#/components/schemas/User'
+                
             responses:
                 '200':
                     description: 'Sample response: Details about a user by ID'
@@ -490,8 +498,14 @@ components:
               answer:
                 type: string
          
-   
+    securitySchemes:
+          bearerAuth:            
+              type: http
+              scheme: bearer
+              bearerFormat: JWT 
+
+
       
 
 security:
-  - BasicAuth: []
+  - bearerAuth: []
