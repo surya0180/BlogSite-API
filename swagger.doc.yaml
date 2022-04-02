@@ -1,0 +1,393 @@
+openapi : 3.0.0
+
+info: 
+    title : 'BlogSite API'
+    version : '1.0.0'
+    description : 'BlogSite API'
+
+servers : 
+    - url : http://localhost:5000/api/v1
+
+paths:
+
+    /auth/register: 
+        post:
+          summary: "Path for creating a user"
+          tags:
+            - "Auth"
+          requestBody:
+            required: true
+            content: 
+              application/json:
+                schema: 
+                  $ref: '#/components/schemas/User'
+
+          responses:
+              '200': 
+                  description: "User created Successfully"
+                  content:
+                    application/json:
+                        schema:
+                          items:
+                            $ref: '#/components/schemas/User'
+            
+    /auth/login: 
+        post:
+          summary: "Login a User"
+          tags:
+            - "Auth"
+          requestBody:
+            required: true
+            content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                        email:          
+                           type: string
+                        password:    
+                           type: string
+                    required:
+                            - email
+                            - password
+
+          responses:
+            '200':
+                description: "User login successful"
+
+    # path for getting all user profile details
+    /user/get_user: 
+        get: 
+          summary: 'Gets all user profile details'
+          tags:
+              - profile
+          responses: 
+              '200':
+                  description: 'Fetching All user profile details'
+                 
+                  
+
+    #path for updating user details by using user id
+    #Should update this!!!!                             
+    /user/update_user: 
+          put:
+            summary: 'Profile update endpoint: Updates the user details and returns appropriate status'
+            operationId: updateUser
+            tags:
+                - user
+                - profile
+            parameters: 
+                - in: header
+                  name: Authorization
+                  schema:
+                    type: string
+                  required: true
+            requestBody:
+                 required: true
+                 content: 
+                    application/json:
+                       schema: 
+                         $ref: '#/components/schemas/User'
+                
+            responses:
+                '200':
+                    description: 'Sample response: Details about a user by ID'
+                    headers:
+                        x-next:
+                            description: A link to the next page of responses
+                            schema:
+                                type: string
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+    
+    #get user profiles by using user id
+    /user/get_user/{user_id}:   
+        get: 
+          summary : 'Gets user profile by user ID'
+          tags: 
+            - profile
+          parameters: 
+              - in : path
+                name : user_id
+                required : true
+                schema: 
+                  type : string
+                  
+          responses: 
+              '200': 
+                  description: 'User profile Details by user ID'
+                  content: 
+                      application/json:
+                          schema: 
+                            $ref: '#/components/schemas/User'
+
+    
+
+    /post/get_all_posts:
+        get:
+          summary: "Get all post details from the database"
+          tags:
+            - "post"
+          responses:
+              '200':
+                  description: "All posts details"
+                  content: 
+                      application/json:
+                          schema: 
+                            $ref: '#/components/schemas/Post'
+    
+    #Should update this!!!
+    /post/get_posts:
+        get:
+          summary: "Get post details by using UserId"
+          parameters:
+            - in : header
+              name: authorization
+              schema: 
+                type: string 
+          requestBody:
+              required: true
+              content:
+                application/json:
+                    schema:
+                      type: object 
+                      properties:
+                          userId:
+                            type: string
+
+
+
+          responses:
+              '200': 
+                  description: "Fetched post details by using userId"
+                  content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Post'
+
+    /post/get_post/{postId}:
+          get:
+            summary: "Get post by using post id"
+            parameters:
+              - in : path
+                name: postId
+                schema: 
+                    type: string
+                required: true
+            responses:
+                '200': 
+                    description: "Fetched Post details by using PostID"
+                    content:
+                        application/json:
+                            schema: 
+                                $ref: "#/components/schemas/Post"
+
+    /post/create_post:
+        post:
+            summary: "Create a post"
+            requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                      $ref: "#/components/schemas/Post"
+
+            responses:
+                '200' : 
+                    description: "Post Created Successfully"  
+
+    /post/update_post:
+        post:
+          summary: "Update your post details"
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    postId: 
+                      type: string
+                    title : 
+                      type: string
+                    summary:
+                      type: string
+                    genre:
+                      type: string
+                    cells:
+                      type: array
+                      default: []
+          responses:
+              '200' : 
+                  description: "Post Details updated sucessfully"  
+
+    /post/delete_post:
+        delete:
+            summary: "Delete a post by using userId and postId"
+            requestBody:
+                required: true
+                content:
+                  application/json:
+                      schema: 
+                        type: object
+                        properties:
+                          postId:
+                            type: string
+                          userId:
+                            type: string
+            responses:
+                '200':
+                  description: "Deleted the post succesfully"          
+
+   
+            
+    
+    
+
+            
+
+
+
+components:
+    schemas:
+        User:
+            type: object
+            required:
+                - id
+                - email
+            properties:
+                id:
+                    type: string
+                firstname:
+                    type: string
+                lastname:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+                bio: 
+                    type: string
+                followers: 
+                    type: array
+                    items: 
+                      type: object
+                following:
+                    type: array
+                    items: 
+                      type: object
+                genres: 
+                    type: array
+                    items:
+                      type: object
+
+        Profile: 
+            type: object
+            properties:
+                id:
+                    type: string
+                firstname:
+                    type: string
+                lastname:
+                    type: string
+                email:
+                    type: string
+                bio: 
+                    type: string
+                genres: 
+                    type: array
+                    items:
+                      type: object
+                
+        Post:
+            type: object
+            properties:
+                userId:
+                    type: string
+                title:
+                    type: string
+                summary:
+                    type: string
+                genre:
+                    type: string
+                banner:
+                    type: string
+                cells:
+                    type: array
+                    default : []
+                    
+                    
+                    
+        Question:
+            type: object
+            required:
+                - author
+                - id
+                - userId
+            properties:
+                author:
+                    type: string
+                userId:
+                    type: string
+                questionId: 
+                    type: string
+                questionTitle:
+                    type: string
+                questionDescription:
+                    type: string
+                questionGenre:
+                    type: string
+                publishedDate:
+                    type: string
+                screenshot:
+                    type: string
+                likes: 
+                    type: integer
+                    format: int32
+                bookmarks: 
+                    type: integer
+                    format: int32
+                replies: 
+                    type: array
+                    items:
+                      type: object
+
+        Comment:
+            type: object
+            required: 
+                - postId
+                - description
+            properties: 
+                  postId: 
+                    type: string
+                  commentId: 
+                    type: string
+                  description: 
+                    type: string
+
+        Answer:
+            type: object
+            required:
+              - questionId
+              - answer
+            properties:
+              questionId:
+                type: string
+              answerId: 
+                type: string
+              answer:
+                type: string
+         
+    securitySchemes:
+          bearerAuth:            
+              type: http
+              scheme: bearer
+              bearerFormat: JWT 
+
+
+      
+
+security:
+  - bearerAuth: []
