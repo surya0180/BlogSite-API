@@ -37,4 +37,16 @@ router.post(
     questionController.deleteQuestion
 );
 
+router.post(
+    "/up_vote_question",
+    authMiddleware,
+    questionController.upVoteAQuestion
+);
+
+router.post(
+    "/down_vote_question",
+    authMiddleware,
+    questionController.downVoteAQuestion
+);
+
 module.exports = router;

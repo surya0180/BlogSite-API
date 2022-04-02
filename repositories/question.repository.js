@@ -61,6 +61,28 @@ const deleteQuestion = async (questionId, userId) => {
     );
 };
 
+const upVoteAQuestion = async (questionId, userId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $addToSet: {
+                up_votes: userId,
+            },
+        }
+    );
+};
+
+const downVoteAQuestion = async (questionId, userId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $pull: {
+                up_votes: userId,
+            },
+        }
+    );
+};
+
 const findAllQuestions = async () => {
     return await Question.find();
 };
@@ -80,4 +102,6 @@ module.exports = {
     findAllQuestions,
     findQuestionByQuestionId,
     findQuestionsByUserId,
+    upVoteAQuestion,
+    downVoteAQuestion,
 };
