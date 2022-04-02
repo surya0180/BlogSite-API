@@ -3,8 +3,8 @@ const activityService = require("../../services/activity.service");
 const getLikedContent = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
-            const response = await activityService.getLikedContent(body.userId);
+        if (req.user.id !== undefined) {
+            const response = await activityService.getLikedContent(req.user.id);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
@@ -27,8 +27,8 @@ const getLikedContent = async (req, res) => {
 const getSavedContent = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
-            const response = await activityService.getSavedContent(body.userId);
+        if (req.user.id !== undefined) {
+            const response = await activityService.getSavedContent(req.user.id);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
@@ -51,9 +51,9 @@ const getSavedContent = async (req, res) => {
 const getRecentActivity = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
+        if (req.user.id !== undefined) {
             const response = await activityService.getRecentContent(
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -78,14 +78,14 @@ const addToLikedContent = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.contentType !== undefined &&
             body.contentId !== undefined
         ) {
             const response = await activityService.addToLikedContent(
                 body.contentType,
                 body.contentId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -110,14 +110,14 @@ const removeFromLikedContent = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.contentType !== undefined &&
             body.contentId !== undefined
         ) {
             const response = await activityService.removeFromLikedContent(
                 body.contentType,
                 body.contentId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -142,14 +142,14 @@ const addToSavedContent = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.contentType !== undefined &&
             body.contentId !== undefined
         ) {
             const response = await activityService.addToSavedContent(
                 body.contentType,
                 body.contentId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -174,14 +174,14 @@ const removeFromSavedContent = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.contentType !== undefined &&
             body.contentId !== undefined
         ) {
             const response = await activityService.removeFromSavedContent(
                 body.contentType,
                 body.contentId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -206,14 +206,14 @@ const addToRecentActivity = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.contentType !== undefined &&
             body.contentId !== undefined
         ) {
             const response = await activityService.addToRecentActivity(
                 body.contentType,
                 body.contentId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
