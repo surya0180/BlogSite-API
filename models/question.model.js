@@ -5,7 +5,7 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     title: {
         type: String,
         required: true,
@@ -26,17 +26,15 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    up_votes: {
-        type: Number,
-        required: true,
-    },
-    bookmarks: {
-        type: Number,
-        required: true,
-    },
+    up_votes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     status: {
         type: Boolean,
-        required: true,
+        default: true,
+    },
+    is_active: {
+        type: Boolean,
+        default: true,
     },
     answers: [{ type: mongoose.Schema.Types.ObjectId, ref: "answer" }],
 });

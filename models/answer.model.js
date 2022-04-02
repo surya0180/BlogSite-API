@@ -5,18 +5,24 @@ const answerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    questionId: { type: mongoose.Schema.Types.ObjectId, ref: "question" },
     answered_date: {
         type: String,
         required: true,
     },
-    votes: {
-        type: Number,
+    text: {
+        type: String,
         required: true,
     },
+    votes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     status: {
         type: Boolean,
-        required: true,
+        default: null,
+    },
+    is_active: {
+        type: Boolean,
+        default: true,
     },
 });
 

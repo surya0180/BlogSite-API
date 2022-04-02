@@ -22,6 +22,50 @@ const addUser = async (firstname, lastname, email, password) => {
     }
 };
 
+const addPostIdToUser = async (userId, postId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                posts: postId,
+            },
+        }
+    );
+};
+
+const addQuestionIdToUser = async (userId, questionId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                questions: questionId,
+            },
+        }
+    );
+};
+
+const deletePostIdFromUser = async (userId, postId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                posts: postId,
+            },
+        }
+    );
+};
+
+const deleteQuestionIdFromUser = async (userId, questionId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                questions: questionId,
+            },
+        }
+    );
+};
+
 const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
     return await User.updateOne(
         { _id: uid },
@@ -84,4 +128,8 @@ module.exports = {
     updateUserById,
     addFollower,
     removeFollower,
+    addPostIdToUser,
+    addQuestionIdToUser,
+    deletePostIdFromUser,
+    deleteQuestionIdFromUser,
 };
