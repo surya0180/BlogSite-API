@@ -25,6 +25,7 @@ const questionSchema = new mongoose.Schema({
     screenshot: {
         type: String,
         required: false,
+        default: "Screen shot image",
     },
     up_votes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],

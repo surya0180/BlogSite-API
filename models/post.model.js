@@ -29,6 +29,7 @@ const postSchema = new mongoose.Schema({
     banner: {
         type: String,
         required: false,
+        default: "banner image",
     },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
