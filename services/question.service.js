@@ -74,13 +74,18 @@ const deleteQuestion = async (questionsId, userId) => {
     }
 };
 
-const getQuestions = async () => {
+const getQuestions = async (page, limit) => {
     try {
-        const questions = await questionsRepo.findAllQuestions();
+        const startIndex = (page - 1) * limit;
+        const numberOfPages = await questionsRepo.findNumberOfPages(limit);
+        const questions = await questionsRepo.findAllQuestions(
+            startIndex,
+            limit
+        );
         return {
             status: true,
             message: "Fetched all questions successfully",
-            data: questions,
+            data: { questions, numberOfPages },
             errors: {},
         };
     } catch (error) {

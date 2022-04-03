@@ -92,6 +92,10 @@ const deleteCommentInPost = async (postId, commentId) => {
     );
 };
 
+const findNumberOfPages = async (limit) => {
+    return Math.ceil((await Post.find()).length / limit);
+};
+
 module.exports = {
     addPost,
     updatePost,
@@ -101,4 +105,5 @@ module.exports = {
     findPostsByUserId,
     addCommentToPost,
     deleteCommentInPost,
+    findNumberOfPages,
 };

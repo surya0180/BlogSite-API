@@ -99,8 +99,24 @@ const deleteQuestion = async (req, res) => {
 
 const getQuestions = async (req, res) => {
     try {
-        const response = await questionService.getQuestions();
-        return res.status(200).json(response);
+        const page = req.query.page;
+        const limit = req.query.limit;
+        if (
+            page !== undefined &&
+            limit !== undefined &&
+            page !== null &&
+            limit !== null
+        ) {
+            const response = await questionService.getQuestions(page, limit);
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Query parameters are required",
+                data: {},
+                errors: {},
+            });
+        }
     } catch (error) {
         return res.status(500).json({
             status: false,

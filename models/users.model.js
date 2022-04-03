@@ -28,6 +28,7 @@ const userSchema = mongoose.Schema({
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     genres: {
         type: Array,
+        default: [],
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
     questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "question" }],
