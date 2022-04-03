@@ -181,25 +181,10 @@ paths:
                           schema: 
                             $ref: '#/components/schemas/Post'
     
-    #Should update this!!!
+    
     /post/get_posts:
         get:
           summary: "Get post details by using UserId"
-          parameters:
-            - in : header
-              name: authorization
-              schema: 
-                type: string 
-          requestBody:
-              required: true
-              content:
-                application/json:
-                    schema:
-                      type: object 
-                      properties:
-                          userId:
-                            type: string
-          
           responses:
               '200': 
                   description: "Fetched post details by using userId"
@@ -434,6 +419,41 @@ paths:
                         answers: 
                           type: array
 
+    /question/get_questions:
+        get:
+          summary: "Get all questions added by the current user"
+          tags:
+            - "question"
+          responses:
+            "200":
+              description: "Fetched the question details sucessfully"
+              content:
+                application/json:
+                  schema:
+                      type: object
+                      properties:
+                          author:
+                            type: string
+                          title:
+                            type: string
+                          genre:
+                            type: string
+                          published_date:
+                            type: string
+                          screenshot:
+                            type: string
+                          up_votes:
+                            type: array
+                            default: []
+                          bookmarks:
+                            type: array
+                            default: []
+                          answers:
+                            type: array
+                            default: []
+                 
+    
+    
     /question/up_vote_question:
         post:
           summary: "Upvote a question"
@@ -533,7 +553,22 @@ paths:
             responses:
                 '200':
                   description: "Deleted comment from the post succesfully"
-    
+
+    /comment/get_comments/{postId}:
+            get:
+              summary: "Get all comments from a particular post"
+              tags:
+                - "post"
+              parameters:
+                - in : path
+                  name: postId
+                  required: true
+                  schema: 
+                    type: string
+
+              responses:
+                    '200': 
+                      description: "Fetched all comments from the post"    
     
     #get comments from a particular post using a postId
 
@@ -683,7 +718,7 @@ paths:
                 description: "Marked answer as incorrect" 
 
     /answer/delete_answer:
-        post: 
+        delete: 
           summary: "Delete an answer for a particular question"
           tags:
             - "question"
