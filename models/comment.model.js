@@ -18,11 +18,7 @@ const commentModel = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "post",
         default: null,
-    },
-    is_active: {
-        type: Boolean,
-        default: true,
-    },
+    }
 });
 
 module.exports = mongoose.model("comment", commentModel);

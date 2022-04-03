@@ -55,10 +55,10 @@ const editComment = async (commentId, text) => {
     }
 };
 
-const deleteComment = async (commentId) => {
+const deleteComment = async (commentId, postId) => {
     try {
         const comment = await commentRepo.deleteComment(commentId);
-        await postRepo.deleteCommentInPost(postId, comment._id);
+        await postRepo.deleteCommentInPost(postId, commentId);
 
         return {
             status: true,

@@ -27,13 +27,8 @@ const editComment = async (commentId, text) => {
 };
 
 const deleteComment = async (commentId) => {
-    return await Comment.updateOne(
+    return await Comment.deleteOne(
         { _id: commentId },
-        {
-            $set: {
-                is_active: false,
-            },
-        }
     );
 };
 

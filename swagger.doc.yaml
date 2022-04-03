@@ -177,6 +177,18 @@ paths:
       summary: "Get all post details from the database"
       tags:
         - "post"
+      parameters:
+        - in : query
+          name: page
+          schema:
+            type: integer
+          required: true
+        - in : query
+          name: limit
+          schema:
+            type: integer
+          required: true
+
       responses:
         "200":
           description: "All posts details"
@@ -274,8 +286,7 @@ paths:
               properties:
                 postId:
                   type: string
-                userId:
-                  type: string
+                
       responses:
         "200":
           description: "Deleted the post succesfully"
@@ -331,7 +342,7 @@ paths:
           description: "Question details updated successfully"
 
   /question/delete_question:
-    post:
+    delete:
       summary: "Delete Question"
       tags:
         - "question"
@@ -344,8 +355,7 @@ paths:
               properties:
                 questionId:
                   type: string
-                userId:
-                  type: string
+                
       responses:
         "200":
           description: "Question deleted successfully"
@@ -355,6 +365,17 @@ paths:
       summary: "Get all questions from the database"
       tags:
         - "question"
+      parameters:
+        - in : query
+          name: page
+          schema:
+            type: integer
+          required: true
+        - in : query
+          name: limit
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Questions feteched from the database"
@@ -547,7 +568,7 @@ paths:
           description: "Edit your comment successfully"
 
   /comment/delete_comment:
-    post:
+    delete:
       summary: "Delete a comment from a post"
       tags:
         - "comments"
@@ -559,6 +580,8 @@ paths:
               type: object
               properties:
                 commentId:
+                  type: string
+                postId: 
                   type: string
 
       responses:
