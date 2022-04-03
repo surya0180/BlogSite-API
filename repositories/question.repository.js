@@ -120,6 +120,10 @@ const findNumberOfPages = async (limit) => {
     return Math.ceil((await Question.find()).length / limit);
 };
 
+const isQuestionId = async (questionId) => {
+    return await Question.exists({ _id: questionId });
+};
+
 module.exports = {
     addQuestion,
     updateQuestion,
@@ -132,4 +136,5 @@ module.exports = {
     addAnswerToQuestion,
     removeAnswerToQuestion,
     findNumberOfPages,
+    isQuestionId,
 };

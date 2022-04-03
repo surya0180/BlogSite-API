@@ -4,8 +4,14 @@ const getLikedContent = async (userId) => {
     return await Activity.find({ userId, type: "liked" });
 };
 
-const getSavedContent = async (userId) => {
-    return await Activity.find({ userId, type: "saved" });
+const getSavedContent = async (userId, startIndex, limit) => {
+    return await Activity.find({ userId, type: "saved" })
+        .populate("forPosts")
+        .populate("forQuestions")
+        .sort({ activity_time: -1 })
+        .limit(limit)
+        .skip(startIndex)
+        .exec();
 };
 
 const getRecentActivity = async (userId) => {

@@ -1,5 +1,7 @@
 const activityRepo = require("../repositories/activity.repository");
 const userRepo = require("../repositories/user.repository");
+const postRepo = require("../repositories/post.repository");
+const questionRepo = require("../repositories/question.repository");
 
 const getLikedContent = async (userId) => {
     try {
@@ -15,13 +17,33 @@ const getLikedContent = async (userId) => {
     }
 };
 
-const getSavedContent = async (userId) => {
+const getSavedContent = async (userId, page, limit) => {
     try {
-        const content = await activityRepo.getSavedContent(userId);
+        const startIndex = (page - 1) * limit;
+        const savedActivity = await activityRepo.getSavedContent(
+            userId,
+            startIndex,
+            limit
+        );
+        const saved = [];
+
+        savedActivity.forEach(async (activity) => {
+            if (await postRepo.isPostId(activity.contentId)) {
+                const post = postRepo.findPostByPostId(activity.contentId);
+                saved.push(post);
+            }
+            if (await questionRepo.isQuestionId(activity.contentId)) {
+                const question = questionRepo.findQuestionByQuestionId(
+                    activity.contentId
+                );
+                saved.push(question);
+            }
+        });
+
         return {
             status: true,
             message: "Saved content fetched successfully",
-            data: content,
+            data: saved,
             errors: {},
         };
     } catch (error) {
