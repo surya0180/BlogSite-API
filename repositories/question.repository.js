@@ -95,6 +95,27 @@ const findQuestionsByUserId = async (userId) => {
     return await Question.find({ userId });
 };
 
+const addAnswerToQuestion = async (questionId, answerId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $addToSet: {
+                answers: answerId,
+            },
+        }
+    );
+};
+const removeAnswerToQuestion = async (questionId, answerId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $pull: {
+                answers: answerId,
+            },
+        }
+    );
+};
+
 module.exports = {
     addQuestion,
     updateQuestion,
@@ -104,4 +125,6 @@ module.exports = {
     findQuestionsByUserId,
     upVoteAQuestion,
     downVoteAQuestion,
+    addAnswerToQuestion,
+    removeAnswerToQuestion,
 };
