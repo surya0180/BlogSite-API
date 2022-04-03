@@ -1,5 +1,6 @@
 const commentRepo = require("../repositories/comment.repository");
 const postRepo = require("../repositories/post.repository");
+const userRepo = require("../repositories/user.repository")
 
 const getComments = async (postId) => {
     try {
