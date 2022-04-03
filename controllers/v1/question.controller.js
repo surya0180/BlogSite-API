@@ -153,6 +153,30 @@ const getQuestionsByUserId = async (req, res) => {
     }
 };
 
+const getQuestionsByOtherUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        if (userId !== undefined) {
+            const response = await questionService.getQuestionsByUserId(userId);
+            res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: error.message,
+        });
+    }
+};
+
 const getQuestionByQuestionId = async (req, res) => {
     try {
         const questionId = req.params.questionId;
@@ -232,4 +256,5 @@ module.exports = {
     getQuestionByQuestionId,
     upVoteAQuestion,
     downVoteAQuestion,
+    getQuestionsByOtherUserId,
 };

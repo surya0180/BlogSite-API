@@ -4,12 +4,24 @@ const getLikedContent = async (userId) => {
     return await Activity.find({ userId, type: "liked" });
 };
 
-const getSavedContent = async (userId) => {
-    return await Activity.find({ userId, type: "saved" });
+const getSavedContent = async (userId, startIndex, limit) => {
+    return await Activity.find({ userId, type: "saved" })
+        .populate("forPosts")
+        .populate("forQuestions")
+        .sort({ activity_time: -1 })
+        .limit(limit)
+        .skip(startIndex)
+        .exec();
 };
 
 const getRecentActivity = async (userId) => {
-    return await Activity.find({ userId, type: "recents" });
+    return await Activity.find({ userId, type: "recents" })
+        .sort({ activity_time: -1 })
+        .limit(10);
+};
+
+const getActivityIdByContentId = async (userId, contentId) => {
+    return (await Activity.findOne({ userId, contentId }))._id;
 };
 
 const addToLikedContent = async (contentType, contentId, userId, timestamp) => {
@@ -18,32 +30,13 @@ const addToLikedContent = async (contentType, contentId, userId, timestamp) => {
         {
             $set: {
                 activity_time: timestamp,
+                contentId,
             },
-            $addToSet:
-                contentType === "post"
-                    ? {
-                          posts: contentId,
-                      }
-                    : {
-                          questions: contentId,
-                      },
         }
     );
 };
-const removeFromLikedContent = async (contentType, contentId, userId) => {
-    return await Activity.updateOne(
-        { userId, type: "liked" },
-        {
-            $pull:
-                contentType === "post"
-                    ? {
-                          posts: contentId,
-                      }
-                    : {
-                          questions: contentId,
-                      },
-        }
-    );
+const removeFromLikedContent = async (userId, contentId) => {
+    return await Activity.deleteOne({ userId, contentId, type: "liked" });
 };
 const addToSavedContent = async (contentType, contentId, userId, timestamp) => {
     return await Activity.updateOne(
@@ -51,32 +44,13 @@ const addToSavedContent = async (contentType, contentId, userId, timestamp) => {
         {
             $set: {
                 activity_time: timestamp,
+                contentId,
             },
-            $addToSet:
-                contentType === "post"
-                    ? {
-                          posts: contentId,
-                      }
-                    : {
-                          questions: contentId,
-                      },
         }
     );
 };
 const removeFromSavedContent = async (contentType, contentId, userId) => {
-    return await Activity.updateOne(
-        { userId, type: "saved" },
-        {
-            $pull:
-                contentType === "post"
-                    ? {
-                          posts: contentId,
-                      }
-                    : {
-                          questions: contentId,
-                      },
-        }
-    );
+    return await Activity.deleteOne({ userId, contentId, type: "saved" });
 };
 const addToRecentActivity = async (
     contentType,
@@ -89,15 +63,8 @@ const addToRecentActivity = async (
         {
             $set: {
                 activity_time: timestamp,
+                contentId,
             },
-            $addToSet:
-                contentType === "post"
-                    ? {
-                          posts: contentId,
-                      }
-                    : {
-                          questions: contentId,
-                      },
         }
     );
 };
@@ -106,6 +73,7 @@ module.exports = {
     getLikedContent,
     getSavedContent,
     getRecentActivity,
+    getActivityIdByContentId,
     addToLikedContent,
     removeFromLikedContent,
     addToSavedContent,

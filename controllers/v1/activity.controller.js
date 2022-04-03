@@ -26,9 +26,20 @@ const getLikedContent = async (req, res) => {
 
 const getSavedContent = async (req, res) => {
     try {
-        const body = req.body;
-        if (req.user.id !== undefined) {
-            const response = await activityService.getSavedContent(req.user.id);
+        const page = req.query.page;
+        const limit = req.query.limit;
+        if (
+            req.user.id !== undefined &&
+            page !== undefined &&
+            page !== null &&
+            limit !== undefined &&
+            limit !== null
+        ) {
+            const response = await activityService.getSavedContent(
+                req.user.id,
+                page,
+                limit
+            );
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
