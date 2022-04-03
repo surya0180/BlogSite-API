@@ -4,13 +4,13 @@ const createQuestion = async (req, res) => {
     try {
         const body = req.body;
         if (
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.title !== undefined &&
             body.summary !== undefined &&
             body.genre !== undefined
         ) {
             const response = await questionService.createQuestion(
-                body.userId,
+                req.user.id,
                 body.title,
                 body.summary,
                 body.genre,
@@ -73,10 +73,10 @@ const updateQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && body.userId) {
+        if (body.questionId !== undefined && req.user.id) {
             const response = await questionService.deleteQuestion(
                 body.questionId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -114,9 +114,9 @@ const getQuestions = async (req, res) => {
 const getQuestionsByUserId = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
+        if (req.user.id !== undefined) {
             const response = await questionService.getQuestionsByUserId(
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -166,10 +166,10 @@ const getQuestionByQuestionId = async (req, res) => {
 const upVoteAQuestion = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && body.userId !== undefined) {
+        if (body.questionId !== undefined && req.user.id !== undefined) {
             const response = await questionService.upVoteAQuestion(
                 body.questionId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -188,10 +188,10 @@ const upVoteAQuestion = async (req, res) => {
 const downVoteAQuestion = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && body.userId !== undefined) {
+        if (body.questionId !== undefined && req.user.id !== undefined) {
             const response = await questionService.downVoteAQuestion(
                 body.questionId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
