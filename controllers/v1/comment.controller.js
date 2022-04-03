@@ -2,9 +2,9 @@ const commentService = require("../../services/comment.service");
 
 const getComments = async (req, res) => {
     try {
-        const body = req.body;
-        if (body.postId !== undefined) {
-            const response = await commentService.getComments();
+        const postId = req.params.postId;
+        if (postId !== undefined) {
+            const response = await commentService.getComments(postId);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({

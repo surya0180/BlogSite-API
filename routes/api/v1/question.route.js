@@ -31,7 +31,7 @@ router.post(
     questionController.updateQuestion
 );
 
-router.post(
+router.delete(
     "/delete_question",
     authMiddleware,
     questionController.deleteQuestion

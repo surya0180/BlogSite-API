@@ -73,7 +73,7 @@ const updateQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
     try {
         const body = req.body;
-        if (body.questionId !== undefined && req.user.id) {
+        if (body.questionId !== undefined && req.user.id !== undefined) {
             const response = await questionService.deleteQuestion(
                 body.questionId,
                 req.user.id
