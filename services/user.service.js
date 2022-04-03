@@ -1,6 +1,6 @@
 const userRepo = require("../repositories/user.repository");
 
-const updateUser = async (uid, firstname, lastname, email, bio, genres) => {
+const updateUser = async (uid, firstname, lastname, bio, genres) => {
     try {
         const user = await userRepo.findUserById(uid);
         if (!user) {
@@ -15,7 +15,6 @@ const updateUser = async (uid, firstname, lastname, email, bio, genres) => {
             uid,
             firstname,
             lastname,
-            email,
             bio,
             genres
         );

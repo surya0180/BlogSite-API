@@ -68,14 +68,15 @@ const getRecentActivity = async (userId) => {
 const addToLikedContent = async (contentType, contentId, userId) => {
     try {
         const timestamp = new Date();
-        if (contentType !== "post" || contentType !== "question") {
+        if (contentType !== "post" && contentType !== "question") {
             return {
                 status: false,
                 message: "Invalid content type provided",
-                data: {},
+                data: contentType,
                 errors: {},
             };
         }
+        
         const activity = await activityRepo.addToLikedContent(
             contentType,
             contentId,
@@ -83,6 +84,9 @@ const addToLikedContent = async (contentType, contentId, userId) => {
             timestamp
         );
         await userRepo.addToLiked(activity._id, userId);
+        contentType === "post"
+            ? await postRepo.addLikeToPost(userId, contentId)
+            : await questionRepo.upVoteAQuestion(contentId, userId);
         return {
             status: true,
             message: "Added to liked content successfully",

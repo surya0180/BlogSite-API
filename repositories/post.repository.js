@@ -92,6 +92,28 @@ const deleteCommentInPost = async (postId, commentId) => {
     );
 };
 
+const addLikeToPost = async (userId, postId) => {
+    return await Post.updateOne(
+        {_id: postId},
+        {
+            $addToSet: {
+                likes: userId,
+            }
+        }
+    )
+}
+
+const removeLikeToPost = async (userId, postId) => {
+    return await Post.updateOne(
+        {_id: postId},
+        {
+            $pull: {
+                likes: userId,
+            }
+        }
+    )
+}
+
 const findNumberOfPages = async (limit) => {
     return Math.ceil((await Post.find()).length / limit);
 };
@@ -109,6 +131,8 @@ module.exports = {
     findPostsByUserId,
     addCommentToPost,
     deleteCommentInPost,
+    addLikeToPost,
+    removeLikeToPost,
     findNumberOfPages,
     isPostId,
 };

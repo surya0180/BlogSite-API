@@ -53,7 +53,7 @@ const addAnswer = async (req, res) => {
             status: false,
             message: "Internal Server error",
             data: {},
-            errors: {},
+            errors: error.message,
         });
     }
 };

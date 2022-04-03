@@ -66,14 +66,13 @@ const deleteQuestionIdFromUser = async (userId, questionId) => {
     );
 };
 
-const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
+const updateUserById = async (uid, firstname, lastname, bio, genres) => {
     return await User.updateOne(
         { _id: uid },
         {
             $set: {
                 firstname,
                 lastname,
-                email,
                 bio,
                 genres,
             },
