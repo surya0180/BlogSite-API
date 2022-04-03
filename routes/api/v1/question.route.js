@@ -15,6 +15,11 @@ router.get(
 );
 
 router.get(
+    "/get_questions_by_userId/:userId",
+    questionController.getQuestionsByOtherUserId
+);
+
+router.get(
     "/get_question/:questionId",
     questionController.getQuestionByQuestionId
 );

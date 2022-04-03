@@ -153,6 +153,30 @@ const getPostsByUserId = async (req, res) => {
     }
 };
 
+const getPostsByOtherUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        if (userId !== undefined) {
+            const response = await postService.getPostsByUserId(userId);
+            res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: error.message,
+        });
+    }
+};
+
 const getPostByPostId = async (req, res) => {
     try {
         const postId = req.params.postId;
@@ -184,4 +208,5 @@ module.exports = {
     getPosts,
     getPostsByUserId,
     getPostByPostId,
+    getPostsByOtherUserId,
 };

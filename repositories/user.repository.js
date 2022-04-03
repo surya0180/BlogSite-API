@@ -75,8 +75,6 @@ const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
                 lastname,
                 email,
                 bio,
-            },
-            $addToSet: {
                 genres,
             },
         }
@@ -121,6 +119,61 @@ const removeFollower = async (userId, follow_userId) => {
     );
 };
 
+const addToLiked = async (likedId, userId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                liked: likedId,
+            },
+        }
+    );
+};
+
+const removeFromLiked = async (likedId, userId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                liked: likedId,
+            },
+        }
+    );
+};
+
+const addToSaved = async (savedId, userId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                saved: savedId,
+            },
+        }
+    );
+};
+
+const removeFromSaved = async (savedId, userId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                saved: savedId,
+            },
+        }
+    );
+};
+
+const addToRecents = async (recentId, userId) => {
+    return await User.updateOne(
+        { _id: userId },
+        {
+            $addToSet: {
+                recents: recentId,
+            },
+        }
+    );
+};
+
 module.exports = {
     findUserByEmail,
     findUserById,
@@ -132,4 +185,9 @@ module.exports = {
     addQuestionIdToUser,
     deletePostIdFromUser,
     deleteQuestionIdFromUser,
+    addToLiked,
+    addToSaved,
+    addToRecents,
+    removeFromLiked,
+    removeFromSaved,
 };
