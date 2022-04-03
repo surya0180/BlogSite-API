@@ -28,12 +28,12 @@ const addComment = async (req, res) => {
         const body = req.body;
         if (
             body.postId !== undefined &&
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.text !== undefined
         ) {
             const response = await commentService.addComment(
                 body.postId,
-                body.userId,
+                req.user.id,
                 body.text
             );
             return res.status(200).json(response);

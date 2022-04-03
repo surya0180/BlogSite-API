@@ -3,14 +3,14 @@ const postService = require("../../services/post.service");
 const createPost = async (req, res) => {
     try {
         const body = req.body;
-        console.log(body)
+        console.log(body);
         if (
             body.title !== undefined &&
             body.summary !== undefined &&
             body.genre !== undefined
         ) {
             const response = await postService.createPost(
-                body.userId,
+                req.user.id,
                 body.title,
                 body.summary,
                 body.genre,
@@ -75,10 +75,10 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const body = req.body;
-        if (body.postId !== undefined && body.userId) {
+        if (body.postId !== undefined && req.user.id) {
             const response = await postService.deletePost(
                 body.postId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -116,8 +116,8 @@ const getPosts = async (req, res) => {
 const getPostsByUserId = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
-            const response = await postService.getPostsByUserId(body.userId);
+        if (req.user.id !== undefined) {
+            const response = await postService.getPostsByUserId(req.user.id);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
