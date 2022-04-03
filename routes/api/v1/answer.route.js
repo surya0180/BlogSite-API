@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/get_answers/:questionId", answerController.getAnswersOfQuestion);
 router.post("/add_answer", authMiddleware, answerController.addAnswer);
 router.post("/edit_answer", authMiddleware, answerController.editAnswer);
-router.post("/delete_answer", authMiddleware, answerController.deleteAnswer);
+router.delete("/delete_answer", authMiddleware, answerController.deleteAnswer);
 router.post(
     "/up_vote_answer",
     authMiddleware,

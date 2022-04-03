@@ -31,11 +31,11 @@ const addAnswer = async (req, res) => {
         const body = req.body;
         if (
             body.questionId !== undefined &&
-            body.userId !== undefined &&
+            req.user.id !== undefined &&
             body.text !== undefined
         ) {
             const response = await answerService.addAnswer(
-                body.userId,
+                req.user.id,
                 body.questionId,
                 body.text
             );
@@ -115,10 +115,10 @@ const deleteAnswer = async (req, res) => {
 const addVoteToAnswer = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined && body.answerId !== undefined) {
+        if (req.user.id !== undefined && body.answerId !== undefined) {
             const response = await answerService.addVoteToAnswer(
                 body.answerId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -142,10 +142,10 @@ const addVoteToAnswer = async (req, res) => {
 const removeVoteToAnswer = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined && body.answerId !== undefined) {
+        if (req.user.id !== undefined && body.answerId !== undefined) {
             const response = await answerService.removeVoteToAnswer(
                 body.answerId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
