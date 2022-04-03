@@ -178,12 +178,12 @@ paths:
       tags:
         - "post"
       parameters:
-        - in : query
+        - in: query
           name: page
           schema:
             type: integer
           required: true
-        - in : query
+        - in: query
           name: limit
           schema:
             type: integer
@@ -286,7 +286,7 @@ paths:
               properties:
                 postId:
                   type: string
-                
+
       responses:
         "200":
           description: "Deleted the post succesfully"
@@ -355,7 +355,7 @@ paths:
               properties:
                 questionId:
                   type: string
-                
+
       responses:
         "200":
           description: "Question deleted successfully"
@@ -366,12 +366,12 @@ paths:
       tags:
         - "question"
       parameters:
-        - in : query
+        - in: query
           name: page
           schema:
             type: integer
           required: true
-        - in : query
+        - in: query
           name: limit
           schema:
             type: integer
@@ -581,7 +581,7 @@ paths:
               properties:
                 commentId:
                   type: string
-                postId: 
+                postId:
                   type: string
 
       responses:
@@ -802,7 +802,7 @@ paths:
 
   /activity/add_to_liked:
     post:
-      summary: "Add liked posts or questions of a user"
+      summary: "Add like to posts or question"
       tags:
         - "activity"
       requestBody:
@@ -815,10 +815,7 @@ paths:
                   type: string
                 contentId:
                   type: string
-                userId:
-                  type: string
-                time_stamp:
-                  type: string
+
       responses:
         "200":
           description: "Add the post or question into liked content sucessfully"
@@ -846,7 +843,7 @@ paths:
 
   /activity/add_to_saved:
     post:
-      summary: "Add boomarked posts or questions of a user to saved content"
+      summary: "Bookmark posts or questions"
       tags:
         - "activity"
       requestBody:
@@ -859,13 +856,10 @@ paths:
                   type: string
                 contentId:
                   type: string
-                userId:
-                  type: string
-                time_stamp:
-                  type: string
+
       responses:
         "200":
-          description: "Add the post or question into saved content sucessfully"
+          description: "Bookmarked the post or question sucessfully"
 
   /activity/remove_from_saved:
     post:
@@ -947,20 +941,16 @@ components:
     Profile:
       type: object
       properties:
-        uid:
-          type: string
         firstname:
           type: string
         lastname:
-          type: string
-        email:
           type: string
         bio:
           type: string
         genres:
           type: array
-          items:
-            type: object
+          default: []
+          
 
     Post:
       type: object

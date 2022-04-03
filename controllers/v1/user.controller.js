@@ -52,12 +52,11 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const body = req.body;
-        if (body.email !== undefined && req.user.id !== undefined) {
+        if (req.user.id !== undefined) {
             const response = await userService.updateUser(
                 req.user.id,
                 body.firstname,
                 body.lastname,
-                body.email,
                 body.bio,
                 body.genres
             );

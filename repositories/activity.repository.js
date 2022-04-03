@@ -25,15 +25,13 @@ const getActivityIdByContentId = async (userId, contentId) => {
 };
 
 const addToLikedContent = async (contentType, contentId, userId, timestamp) => {
-    return await Activity.updateOne(
-        { userId, type: "liked" },
-        {
-            $set: {
-                activity_time: timestamp,
-                contentId,
-            },
-        }
-    );
+    const activity = new Activity({
+        type: "liked",
+        userId,
+        activity_time: timestamp,
+        contentId,
+    })
+    return await activity.save()
 };
 const removeFromLikedContent = async (userId, contentId) => {
     return await Activity.deleteOne({ userId, contentId, type: "liked" });
@@ -68,6 +66,10 @@ const addToRecentActivity = async (
         }
     );
 };
+
+const isActivityExists = async (contentId, contentType, userId) => {
+    return await Activity.exists({contentId, userId, type: contentType})
+}
 
 module.exports = {
     getLikedContent,
