@@ -1,880 +1,1028 @@
-openapi : 3.0.0
+openapi: 3.0.0
 
-info: 
-    title : 'BlogSite API'
-    version : '1.0.0'
-    description : 'BlogSite API'
+info:
+  title: "BlogSite API"
+  version: "1.0.0"
+  description: "BlogSite API"
 
-servers : 
-    - url : http://localhost:5000/api/v1
-      description: "Blogsite API development server"
+servers:
+  - url: http://localhost:5000/api/v1
+    description: "Blogsite API development server"
 
 paths:
-
-    /auth/register: 
-        post:
-          summary: "Path for creating a user"
-          tags:
-            - "Auth"
-          requestBody:
-            required: true
-            content: 
-              application/json:
-                schema: 
-                  $ref: '#/components/schemas/User'
-
-          responses:
-              '200': 
-                  description: "User created Successfully"
-                  content:
-                    application/json:
-                        schema:
-                          items:
-                            $ref: '#/components/schemas/User'
-            
-    /auth/login: 
-        post:
-          summary: "Login a User"
-          tags:
-            - "Auth"
-          requestBody:
-            required: true
-            content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                        email:          
-                           type: string
-                        password:    
-                           type: string
-                    required:
-                            - email
-                            - password
-
-          responses:
-            '200':
-                description: "User login successful"
-
-    # path for getting all user profile details
-    /user/get_user: 
-        get: 
-          summary: 'Gets all user profile details'
-          tags:
-              - profile
-          responses: 
-              '200':
-                  description: 'Fetching All user profile details'
-                 
-                  
-
-    #path for updating user details by using user id
-    #Should update this!!!!                             
-    /user/update_user: 
-          post:
-            summary: 'Profile update endpoint: Updates the user details and returns appropriate status'
-            operationId: updateUser
-            tags:
-                - user
-                - profile
-            parameters: 
-                - in: header
-                  name: Authorization
-                  schema:
-                    type: string
-                  required: true
-            requestBody:
-                 required: true
-                 content: 
-                    application/json:
-                       schema: 
-                         $ref: '#/components/schemas/Profile'
-                
-            responses:
-                '200':
-                    description: 'User details updated sucessfully'
-                    headers:
-                        x-next:
-                            description: A link to the next page of responses
-                            schema:
-                                type: string
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/User'
-    
-    #get user profiles by using user id
-    /user/get_user/{user_id}:   
-        get: 
-          summary : 'Gets user profile by user ID'
-          tags: 
-            - profile
-          parameters: 
-              - in : path
-                name : user_id
-                required : true
-                schema: 
-                  type : string
-                  
-          responses: 
-              '200': 
-                  description: 'User profile Details by user ID'
-                  content: 
-                      application/json:
-                          schema: 
-                            $ref: '#/components/schemas/User'
-
-    /user/follow_user:
-        post:
-          summary: "Follow a User"
-          tags:
-            - "profile"
-          requestBody:
-              required: true
-              content:
-                  application/json:
-                      schema:
-                          type: object
-                          properties:
-                            userId:
-                              type: string
-                            follow_userId:
-                              type: string
-
-          responses:
-              '200':
-                  description: "Add user to the following list"
-
-    /user/unfollow_user:
-        post:
-          summary: "UnFollow a User"
-          tags:
-            - "profile"
-          requestBody:
-              required: true
-              content:
-                  application/json:
-                      schema:
-                          type: object
-                          properties:
-                            userId:
-                              type: string
-                            follow_userId:
-                              type: string
-
-          responses:
-              '200':
-                  description: "Removed user from the following list"
-
-
-
-    /post/get_all_posts:  
-        get:
-          summary: "Get all post details from the database"
-          tags:
-            - "post"
-          responses:
-              '200':
-                  description: "All posts details"
-                  content: 
-                      application/json:
-                          schema: 
-                            $ref: '#/components/schemas/Post'
-    
-    
-    /post/get_posts:
-        get:
-          summary: "Get post details by using UserId"
-          responses:
-              '200': 
-                  description: "Fetched post details by using userId"
-                  content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Post'
-
-    /post/get_post/{postId}:
-          get:
-            summary: "Get post by using post id"
-            parameters:
-              - in : path
-                name: postId
-                schema: 
-                    type: string
-                required: true
-            responses:
-                '200': 
-                    description: "Fetched Post details by using PostID"
-                    content:
-                        application/json:
-                            schema: 
-                                $ref: "#/components/schemas/Post"
-
-    /post/create_post:
-        post:
-            summary: "Create a post"
-            requestBody:
-              required: true
-              content:
-                application/json:
-                  schema:
-                      $ref: "#/components/schemas/Post"
-
-            responses:
-                '200' : 
-                    description: "Post Created Successfully"  
-
-    /post/update_post:
-        post:
-          summary: "Update your post details"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                    postId: 
-                      type: string
-                    title : 
-                      type: string
-                    summary:
-                      type: string
-                    genre:
-                      type: string
-                    cells:
-                      type: array
-                      default: []
-          responses:
-              '200' : 
-                  description: "Post Details updated sucessfully"  
-
-    /post/delete_post:
-        delete:
-            summary: "Delete a post by using userId and postId"
-            requestBody:
-                required: true
-                content:
-                  application/json:
-                      schema: 
-                        type: object
-                        properties:
-                          postId:
-                            type: string
-                          userId:
-                            type: string
-            responses:
-                '200':
-                  description: "Deleted the post succesfully"          
-
-    /question/create_question:
-        post:
-          summary: "Create a Question"
-          tags:
-            - "question"
-          parameters:
-            - in : header
-              name: authorization
-              required: true
-              schema: 
-                type: string
-              
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/Question"
-
-          responses:
-            '200' : 
-                description: "Question Created Successfully"
-
-    /question/update_question:
-        post:
-          summary: "Update your question details"
-          tags:
-            - "question"
-          requestBody:
-              required: true
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      questionId:
-                          type: string
-                      title: 
-                          type: string
-                      summary:
-                          type: string
-                      genre:
-                          type: string
-                      screenshot:
-                          type: string
-          responses:
-              '200':
-                  description: "Question details updated successfully"
-
-    /question/delete_question:
-        post:
-          summary: "Delete Question"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                    questionId:
-                      type: string
-                    userId:
-                      type: string
-          responses:
-            '200':
-              description: "Question deleted successfully"
-
-    /question/get_all_questions:
-        get:
-          summary: "Get all questions from the database"
-          tags:
-            - "question"
-          responses:
-            '200':
-              description: "Questions feteched from the database"
-              content:
-                application/json:
-                  schema: 
-                    type: object
-                    properties:
-                      questionId:
-                        type: string
-                      userId:
-                        type: string
-                      author:
-                        type: string
-                      title: 
-                        type: string
-                      summary: 
-                        type: string
-                      genre:
-                        type: string
-                      published_date:
-                        type: string
-                      screenshot:
-                        type: string
-                      up_votes:
-                        type: integer
-                        format: int32
-                      bookmarks:
-                        type: integer
-                        format: int32
-                      answers: 
-                        type: array
-
-    /question/get_question/{questionId}:
-        get:
-          summary: "Get question details by using questionId"
-          tags:
-            - "question"
-          parameters:
-            - in : path
-              name: questionId
-              schema: 
-                type: string
-              required: true
-          responses:
-            '200':
-              description: "Question details fetched by using questionId"
-              content:
-                  application/json:
-                    schema:
-                      type: object
-                      properties:
-                        questionId:
-                          type: string
-                        userId:
-                          type: string
-                        author:
-                          type: string
-                        title: 
-                          type: string
-                        summary: 
-                          type: string
-                        genre:
-                          type: string
-                        published_date:
-                          type: string
-                        screenshot:
-                          type: string
-                        up_votes:
-                          type: integer
-                          format: int32
-                        bookmarks:
-                          type: integer
-                          format: int32
-                        answers: 
-                          type: array
-
-    /question/get_questions:
-        get:
-          summary: "Get all questions added by the current user"
-          tags:
-            - "question"
-          responses:
-            "200":
-              description: "Fetched the question details sucessfully"
-              content:
-                application/json:
-                  schema:
-                      type: object
-                      properties:
-                          author:
-                            type: string
-                          title:
-                            type: string
-                          genre:
-                            type: string
-                          published_date:
-                            type: string
-                          screenshot:
-                            type: string
-                          up_votes:
-                            type: array
-                            default: []
-                          bookmarks:
-                            type: array
-                            default: []
-                          answers:
-                            type: array
-                            default: []
-                 
-    
-    
-    /question/up_vote_question:
-        post:
-          summary: "Upvote a question"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    questionId:
-                      type: string
-                    userId: 
-                      type: string
-
-          responses:
-                '200':
-                    description: "Added an upvote to the question" 
-
-    /question/down_vote_question:
-        post:
-          summary: "Downvote a question"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    questionId:
-                      type: string
-                    userId: 
-                      type: string
-
-          responses:
-                '200':
-                    description: "Added an downvote to the question" 
-                     
-    # add comment
-    /comment/add_comment:
-        post:
-          summary: "Post a comment in a post"
-          tags:
-            - "post"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/Comment"
-
-          responses:
-                '200':
-                  description: "Comment added to the post successfully" 
-                    
-    #edit your comment
-    /comment/edit_comment:
-        post:
-          summary: "Edit your comment under a post"
-          tags:
-            - "post"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                    commentId:
-                      type: string
-                    text:
-                      type: string
-          responses:
-              '200':
-                  description: "Edit your comment successfully"
-
-    /comment/delete_comment:
-          post:
-            summary: "Delete a comment from a post"
-            tags:
-              - "post"
-            requestBody:
-              required: true
-              content:
-                application/json:
-                  schema:
-                      type: object
-                      properties:
-                        commentId:
-                          type: string
-            
-            responses:
-                '200':
-                  description: "Deleted comment from the post succesfully"
-
-    /comment/get_comments/{postId}:
-            get:
-              summary: "Get all comments from a particular post"
-              tags:
-                - "post"
-              parameters:
-                - in : path
-                  name: postId
-                  required: true
-                  schema: 
-                    type: string
-
-              responses:
-                    '200': 
-                      description: "Fetched all comments from the post"    
-    
-    #get comments from a particular post using a postId
-
-    /answer/add_answer:
-        post: 
-          summary: "Add an answer to a question"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                      userId:
-                        type: string
-                      questionId:
-                        type: string
-                      text:
-                        type: string
-
-          responses:
-              '200':
-                  description: "Answer added to the question successfully"  
-
-    /answer/get_answers/{questionId}:
-        get:
-          summary: "Get answers from a question using questionId"
-          tags:
-            - "question"
-          parameters:
-            - in: path
-              name : questionId
-              schema: 
-                type: string
-              required: true
-
-          responses:
-              '200': 
-                  description: "Fecthed all answers from the question"
-                  content:
-                    application/json:
-                      schema:
-                        type: object
-                        $ref: "#/components/schemas/Answer"
-    
-    /answer/edit_answer:
-        post:
-          summary: "Edit answer by using commentId"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    commentId:
-                      type: string
-                    text:
-                      type: string
-
-          responses:
-              '200':
-                description: "Comment edited successfully"
-
-    /answer/up_vote_answer:
-        post:
-          summary: "Upvote to an answer"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    answerId:
-                      type: string
-                    userId:
-                      type: string
-
-          responses:
-              '200':
-                description: "Added an upvote to the question successfully"  
-
-    /answer/down_vote_answer:
-        post:
-          summary: "Downvote to an answer"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    answerId:
-                      type: string
-                    userId:
-                      type: string
-
-          responses:
-              '200':
-                description: "Added an downvote to the question successfully"
-
-    /answer/mark_as_correct:
-        post: 
-          summary: "Add mark as correct to the answer"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                    answerId:
-                      type: string
-
-          responses:
-              '200':
-                description: "Marked answer as correct"  
-
-    /answer/mark_as_wrong:
-        post: 
-          summary: "Add mark as incorrect to the answer"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                  type: object
-                  properties:
-                    answerId:
-                      type: string
-
-          responses:
-              '200':
-                description: "Marked answer as incorrect" 
-
-    /answer/delete_answer:
-        delete: 
-          summary: "Delete an answer for a particular question"
-          tags:
-            - "question"
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema: 
-                    type: object
-                    properties:
-                        questionId: 
-                          type: string
-                        answerId:
-                          type: string
-          responses:
-              '200':
-                  description: "Deleted answer succesfully"   
-
-    #activity routes
-
-    # /activity/get_liked_content:
-    #     get:
-    #       summary: "Get liked content of a particular user"
-
-
-
-
-
-
-components:
-    schemas:
-        User:
-            type: object
-            required:
-                - id
-                - email
-            properties:
-                id:
-                    type: string
+  /auth/register:
+    post:
+      summary: "Path for creating a user"
+      tags:
+        - "Auth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 firstname:
-                    type: string
+                  type: string
                 lastname:
-                    type: string
+                  type: string
                 email:
-                    type: string
+                  type: string
                 password:
-                    type: string
-                bio: 
-                    type: string
-                followers: 
-                    type: array
-                    items: 
-                      type: object
-                following:
-                    type: array
-                    items: 
-                      type: object
-                genres: 
-                    type: array
-                    items:
-                      type: object
+                  type: string
 
-        Profile: 
-            type: object
-            properties:
-                uid:
-                    type: string
-                firstname:
-                    type: string
-                lastname:
-                    type: string
+      responses:
+        "200":
+          description: "User created Successfully"
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /auth/login:
+    post:
+      summary: "Login a User"
+      tags:
+        - "Auth"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 email:
-                    type: string
-                bio: 
-                    type: string
-                genres: 
-                    type: array
-                    items:
-                      type: object
-                
-        Post:
-            type: object
-            properties:
-                userId:
-                    type: string
-                title:
-                    type: string
-                summary:
-                    type: string
-                genre:
-                    type: string
-                banner:
-                    type: string
-                cells:
-                    type: array
-                    default : []
-                    
-                    
-                    
-        Question:
-            type: object
-            required:
-                - userId
-                - title
-                - summary
-            properties:
-                userId:
-                    type: string
-                title:
-                    type: string
-                summary:
-                    type: string
-                genre:
-                    type: string
-                screenshot:
-                    type: string
-                
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
 
-        Comment:
-            type: object
-            required: 
-                - postId
-                - text
-                - userId
-            properties: 
-                  postId: 
+      responses:
+        "200":
+          description: "User login successful"
+
+  # path for getting all user profile details
+  /user/get_user:
+    get:
+      summary: "Gets current user profile details"
+      tags:
+        - profile
+      responses:
+        "200":
+          description: "Fetched current user profile details"
+
+  #path for updating user details by using user id
+  #Should update this!!!!
+  /user/update_user:
+    post:
+      summary: "Profile update endpoint: Updates the user details and returns appropriate status"
+      operationId: updateUser
+      tags:
+        - user
+        - profile
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profile"
+
+      responses:
+        "200":
+          description: "User details updated sucessfully"
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  #get user profiles by using user id
+  /user/get_user/{user_id}:
+    get:
+      summary: "Gets user profile by user ID"
+      tags:
+        - profile
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "User profile Details by user ID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /user/follow_user:
+    post:
+      summary: "Follow a User"
+      tags:
+        - "profile"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                follow_userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Add user to the following list"
+
+  /user/unfollow_user:
+    post:
+      summary: "UnFollow a User"
+      tags:
+        - "profile"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                follow_userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Removed user from the following list"
+
+  /post/get_all_posts:
+    get:
+      summary: "Get all post details from the database"
+      tags:
+        - "post"
+      responses:
+        "200":
+          description: "All posts details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+
+  /post/get_posts:
+    get:
+      summary: "Get post details by using UserId"
+      tags:
+        - "post"
+      responses:
+        "200":
+          description: "Fetched post details by using userId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+
+  /post/get_post/{postId}:
+    get:
+      summary: "Get post by using post id"
+      tags:
+        - "post"
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "Fetched Post details by using PostID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+
+  /post/create_post:
+    post:
+      summary: "Create a post"
+      tags:
+        - "post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+
+      responses:
+        "200":
+          description: "Post Created Successfully"
+
+  /post/update_post:
+    post:
+      summary: "Update your post details"
+      tags:
+        - "post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: string
+                title:
+                  type: string
+                summary:
+                  type: string
+                genre:
+                  type: string
+                cells:
+                  type: array
+                  default: []
+      responses:
+        "200":
+          description: "Post Details updated sucessfully"
+
+  /post/delete_post:
+    delete:
+      summary: "Delete a post by using userId and postId"
+      tags:
+        - "post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: "Deleted the post succesfully"
+
+  /question/create_question:
+    post:
+      summary: "Create a Question"
+      tags:
+        - "question"
+      parameters:
+        - in: header
+          name: authorization
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/Question"
+
+      responses:
+        "200":
+          description: "Question Created Successfully"
+
+  /question/update_question:
+    post:
+      summary: "Update your question details"
+      tags:
+        - "question"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionId:
+                  type: string
+                title:
+                  type: string
+                summary:
+                  type: string
+                genre:
+                  type: string
+                screenshot:
+                  type: string
+      responses:
+        "200":
+          description: "Question details updated successfully"
+
+  /question/delete_question:
+    post:
+      summary: "Delete Question"
+      tags:
+        - "question"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionId:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: "Question deleted successfully"
+
+  /question/get_all_questions:
+    get:
+      summary: "Get all questions from the database"
+      tags:
+        - "question"
+      responses:
+        "200":
+          description: "Questions feteched from the database"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questionId:
                     type: string
                   userId:
                     type: string
-                  text: 
+                  author:
                     type: string
+                  title:
+                    type: string
+                  summary:
+                    type: string
+                  genre:
+                    type: string
+                  published_date:
+                    type: string
+                  screenshot:
+                    type: string
+                  up_votes:
+                    type: integer
+                    format: int32
+                  bookmarks:
+                    type: integer
+                    format: int32
+                  answers:
+                    type: array
 
-        Answer:
+  /question/get_question/{questionId}:
+    get:
+      summary: "Get question details by using questionId"
+      tags:
+        - "question"
+      parameters:
+        - in: path
+          name: questionId
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: "Question details fetched by using questionId"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questionId:
+                    type: string
+                  userId:
+                    type: string
+                  author:
+                    type: string
+                  title:
+                    type: string
+                  summary:
+                    type: string
+                  genre:
+                    type: string
+                  published_date:
+                    type: string
+                  screenshot:
+                    type: string
+                  up_votes:
+                    type: integer
+                    format: int32
+                  bookmarks:
+                    type: integer
+                    format: int32
+                  answers:
+                    type: array
+
+  /question/get_questions:
+    get:
+      summary: "Get all questions added by the current user"
+      tags:
+        - "question"
+      responses:
+        "200":
+          description: "Fetched the question details sucessfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  author:
+                    type: string
+                  title:
+                    type: string
+                  genre:
+                    type: string
+                  published_date:
+                    type: string
+                  screenshot:
+                    type: string
+                  up_votes:
+                    type: array
+                    default: []
+                  bookmarks:
+                    type: array
+                    default: []
+                  answers:
+                    type: array
+                    default: []
+
+  /question/up_vote_question:
+    post:
+      summary: "Upvote a question"
+      tags:
+        - "question"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionId:
+                  type: string
+                userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Added an upvote to the question"
+
+  /question/down_vote_question:
+    post:
+      summary: "Downvote a question"
+      tags:
+        - "question"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionId:
+                  type: string
+                userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Added an downvote to the question"
+
+  # add comment
+  /comment/add_comment:
+    post:
+      summary: "Post a comment in a post"
+      tags:
+        - "comments"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/Comment"
+
+      responses:
+        "200":
+          description: "Comment added to the post successfully"
+
+  #edit your comment
+  /comment/edit_comment:
+    post:
+      summary: "Edit your comment under a post"
+      tags:
+        - "comments"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: string
+                text:
+                  type: string
+      responses:
+        "200":
+          description: "Edit your comment successfully"
+
+  /comment/delete_comment:
+    post:
+      summary: "Delete a comment from a post"
+      tags:
+        - "comments"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Deleted comment from the post succesfully"
+
+  /comment/get_comments/{postId}:
+    get:
+      summary: "Get all comments from a particular post"
+      tags:
+        - "comments"
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: "Fetched all comments from the post"
+
+  #get comments from a particular post using a postId
+
+  /answer/add_answer:
+    post:
+      summary: "Add an answer to a question"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                questionId:
+                  type: string
+                text:
+                  type: string
+
+      responses:
+        "200":
+          description: "Answer added to the question successfully"
+
+  /answer/get_answers/{questionId}:
+    get:
+      summary: "Get answers from a question using questionId"
+      tags:
+        - "answers"
+      parameters:
+        - in: path
+          name: questionId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: "Fecthed all answers from the question"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Answer"
+
+  /answer/edit_answer:
+    post:
+      summary: "Edit answer by using commentId"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                answerId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Comment edited successfully"
+
+  /answer/up_vote_answer:
+    post:
+      summary: "Upvote to an answer"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answerId:
+                  type: string
+                userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Added an upvote to the question successfully"
+
+  /answer/down_vote_answer:
+    post:
+      summary: "Downvote to an answer"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answerId:
+                  type: string
+                userId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Added an downvote to the question successfully"
+
+  /answer/mark_as_correct:
+    post:
+      summary: "Add mark as correct to the answer"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answerId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Marked answer as correct"
+
+  /answer/mark_as_wrong:
+    post:
+      summary: "Add mark as incorrect to the answer"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answerId:
+                  type: string
+
+      responses:
+        "200":
+          description: "Marked answer as incorrect"
+
+  /answer/delete_answer:
+    delete:
+      summary: "Delete an answer for a particular question"
+      tags:
+        - "answers"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionId:
+                  type: string
+                answerId:
+                  type: string
+      responses:
+        "200":
+          description: "Deleted answer succesfully"
+
+  #activity routes
+
+  /activity/get_liked_content:
+    get:
+      summary: "Get liked content of a particular user"
+      tags:
+        - "activity"
+      responses:
+        "200":
+          description: "Fetched liked content of that user"
+
+  /activity/get_saved_content:
+    get:
+      summary: "Get saved content of a particular user"
+      tags:
+        - "activity"
+      responses:
+        "200":
+          description: "Fetched saved content of the user"
+
+  /activity/get_recent_content:
+    get:
+      summary: "Get recent content of a particular user"
+      tags:
+        - "activity"
+      responses:
+        "200":
+          description: "Fetched recent content of the user"
+
+  /activity/add_to_liked:
+    post:
+      summary: "Add liked posts or questions of a user"
+      tags:
+        - "activity"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                contentId:
+                  type: string
+                userId:
+                  type: string
+                time_stamp:
+                  type: string
+      responses:
+        "200":
+          description: "Add the post or question into liked content sucessfully"
+
+  /activity/remove_from_liked:
+    post:
+      summary: "Remove posts or questions from the liked content"
+      tags:
+        - "activity"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                contentId:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: "Removed from the liked content sucessfully"
+
+  /activity/add_to_saved:
+    post:
+      summary: "Add boomarked posts or questions of a user to saved content"
+      tags:
+        - "activity"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                contentId:
+                  type: string
+                userId:
+                  type: string
+                time_stamp:
+                  type: string
+      responses:
+        "200":
+          description: "Add the post or question into saved content sucessfully"
+
+  /activity/remove_from_saved:
+    post:
+      summary: "Remove posts or questions from the saved content"
+      tags:
+        - "activity"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                contentId:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: "Removed from the saved content sucessfully"
+
+  /activity/add_to_recents:
+    post:
+      summary: "Add posts or questions into recently visited content"
+      tags:
+        - "activity"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                contentId:
+                  type: string
+                userId:
+                  type: string
+                time_stamp:
+                  type: string
+      responses:
+        "200":
+          description: "Add the post or question into recently visited content sucessfully"
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        bio:
+          type: string
+        followers:
+          type: array
+          items:
             type: object
-            required:
-              - questionId
-              - answer
-            properties:
-              userId:
-                type: string
-              questionId: 
-                type: string
-              text:
-                type: string
-              votes:
-                type: array
-                default: []
+        following:
+          type: array
+          items:
+            type: object
+        genres:
+          type: array
+          items:
+            type: object
 
-    securitySchemes:
-          bearerAuth:            
-              type: http
-              scheme: bearer
-              bearerFormat: JWT 
+    Profile:
+      type: object
+      properties:
+        uid:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        bio:
+          type: string
+        genres:
+          type: array
+          items:
+            type: object
 
+    Post:
+      type: object
+      properties:
+        userId:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        genre:
+          type: string
+        banner:
+          type: string
+        cells:
+          type: array
+          default: []
 
-      
+    Question:
+      type: object
+      required:
+        - userId
+        - title
+        - summary
+      properties:
+        userId:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        genre:
+          type: string
+        screenshot:
+          type: string
+
+    Comment:
+      type: object
+      required:
+        - postId
+        - text
+        - userId
+      properties:
+        postId:
+          type: string
+        userId:
+          type: string
+        text:
+          type: string
+
+    Answer:
+      type: object
+      required:
+        - questionId
+        - answer
+      properties:
+        userId:
+          type: string
+        questionId:
+          type: string
+        text:
+          type: string
+        votes:
+          type: array
+          default: []
+
+    Activity:
+      type: object
+      properties:
+        type:
+          type: string
+        userId:
+          type: string
+        posts:
+          type: array
+          default: []
+        questions:
+          type: array
+          default: []
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
 security:
   - bearerAuth: []
