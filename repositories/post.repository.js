@@ -96,6 +96,10 @@ const findNumberOfPages = async (limit) => {
     return Math.ceil((await Post.find()).length / limit);
 };
 
+const isPostId = async (postId) => {
+    return await Post.exists({ _id: postId });
+};
+
 module.exports = {
     addPost,
     updatePost,
@@ -106,4 +110,5 @@ module.exports = {
     addCommentToPost,
     deleteCommentInPost,
     findNumberOfPages,
+    isPostId,
 };
