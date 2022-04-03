@@ -104,9 +104,10 @@ const deletePost = async (postId, userId) => {
     }
 };
 
-const getPosts = async () => {
+const getPosts = async (page, limit) => {
     try {
-        const posts = await postRepo.findAllPosts();
+        const startIndex = (page - 1) * limit;
+        const posts = await postRepo.findAllPosts(startIndex, limit);
         return {
             status: true,
             message: "Fetched all posts successfully",

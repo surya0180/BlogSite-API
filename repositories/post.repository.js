@@ -58,8 +58,8 @@ const deletePost = async (postId, userId) => {
     );
 };
 
-const findAllPosts = async () => {
-    return await Post.find();
+const findAllPosts = async (startIndex, limit) => {
+    return await Post.find().limit(limit).skip(startIndex).exec();
 };
 
 const findPostByPostId = async (postId) => {

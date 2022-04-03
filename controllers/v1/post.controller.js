@@ -101,8 +101,24 @@ const deletePost = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const response = await postService.getPosts();
-        return res.status(200).json(response);
+        const page = req.query.page;
+        const limit = req.query.limit;
+        if (
+            page !== undefined &&
+            page !== null &&
+            limit !== undefined &&
+            limit !== null
+        ) {
+            const response = await postService.getPosts(page, limit);
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing query parameters for this route",
+                data: {},
+                errors: {},
+            });
+        }
     } catch (error) {
         return res.status(500).json({
             status: false,
