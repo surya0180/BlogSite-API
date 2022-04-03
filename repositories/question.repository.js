@@ -83,8 +83,8 @@ const downVoteAQuestion = async (questionId, userId) => {
     );
 };
 
-const findAllQuestions = async () => {
-    return await Question.find();
+const findAllQuestions = async (startIndex, limit) => {
+    return await Question.find().limit(limit).skip(startIndex).exec();
 };
 
 const findQuestionByQuestionId = async (questionId) => {
@@ -93,6 +93,31 @@ const findQuestionByQuestionId = async (questionId) => {
 
 const findQuestionsByUserId = async (userId) => {
     return await Question.find({ userId });
+};
+
+const addAnswerToQuestion = async (questionId, answerId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $addToSet: {
+                answers: answerId,
+            },
+        }
+    );
+};
+const removeAnswerToQuestion = async (questionId, answerId) => {
+    return await Question.updateOne(
+        { _id: questionId },
+        {
+            $pull: {
+                answers: answerId,
+            },
+        }
+    );
+};
+
+const findNumberOfPages = async (limit) => {
+    return Math.ceil((await Question.find()).length / limit);
 };
 
 module.exports = {
@@ -104,4 +129,7 @@ module.exports = {
     findQuestionsByUserId,
     upVoteAQuestion,
     downVoteAQuestion,
+    addAnswerToQuestion,
+    removeAnswerToQuestion,
+    findNumberOfPages,
 };

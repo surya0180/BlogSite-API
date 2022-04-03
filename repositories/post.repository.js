@@ -58,8 +58,8 @@ const deletePost = async (postId, userId) => {
     );
 };
 
-const findAllPosts = async () => {
-    return await Post.find();
+const findAllPosts = async (startIndex, limit) => {
+    return await Post.find().limit(limit).skip(startIndex).exec();
 };
 
 const findPostByPostId = async (postId) => {
@@ -92,6 +92,10 @@ const deleteCommentInPost = async (postId, commentId) => {
     );
 };
 
+const findNumberOfPages = async (limit) => {
+    return Math.ceil((await Post.find()).length / limit);
+};
+
 module.exports = {
     addPost,
     updatePost,
@@ -101,4 +105,5 @@ module.exports = {
     findPostsByUserId,
     addCommentToPost,
     deleteCommentInPost,
+    findNumberOfPages,
 };

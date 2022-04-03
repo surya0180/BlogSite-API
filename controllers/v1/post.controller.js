@@ -3,14 +3,14 @@ const postService = require("../../services/post.service");
 const createPost = async (req, res) => {
     try {
         const body = req.body;
-        console.log(body)
+        console.log(body);
         if (
             body.title !== undefined &&
             body.summary !== undefined &&
             body.genre !== undefined
         ) {
             const response = await postService.createPost(
-                body.userId,
+                req.user.id,
                 body.title,
                 body.summary,
                 body.genre,
@@ -75,10 +75,10 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const body = req.body;
-        if (body.postId !== undefined && body.userId) {
+        if (body.postId !== undefined && req.user.id) {
             const response = await postService.deletePost(
                 body.postId,
-                body.userId
+                req.user.id
             );
             return res.status(200).json(response);
         } else {
@@ -101,8 +101,24 @@ const deletePost = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const response = await postService.getPosts();
-        return res.status(200).json(response);
+        const page = req.query.page;
+        const limit = req.query.limit;
+        if (
+            page !== undefined &&
+            page !== null &&
+            limit !== undefined &&
+            limit !== null
+        ) {
+            const response = await postService.getPosts(page, limit);
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing query parameters for this route",
+                data: {},
+                errors: {},
+            });
+        }
     } catch (error) {
         return res.status(500).json({
             status: false,
@@ -116,8 +132,8 @@ const getPosts = async (req, res) => {
 const getPostsByUserId = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined) {
-            const response = await postService.getPostsByUserId(body.userId);
+        if (req.user.id !== undefined) {
+            const response = await postService.getPostsByUserId(req.user.id);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
@@ -133,6 +149,30 @@ const getPostsByUserId = async (req, res) => {
             message: "Internal Server error",
             data: {},
             errors: {},
+        });
+    }
+};
+
+const getPostsByOtherUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        if (userId !== undefined) {
+            const response = await postService.getPostsByUserId(userId);
+            res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: error.message,
         });
     }
 };
@@ -168,4 +208,5 @@ module.exports = {
     getPosts,
     getPostsByUserId,
     getPostByPostId,
+    getPostsByOtherUserId,
 };

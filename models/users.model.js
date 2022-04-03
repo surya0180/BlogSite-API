@@ -4,10 +4,12 @@ const userSchema = mongoose.Schema({
     firstname: {
         type: String,
         required: false,
+        default: "",
     },
     lastname: {
         type: String,
         required: false,
+        default: "",
     },
     email: {
         type: String,
@@ -20,11 +22,13 @@ const userSchema = mongoose.Schema({
     bio: {
         type: String,
         required: false,
+        default: "",
     },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     genres: {
         type: Array,
+        default: [],
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
     questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "question" }],

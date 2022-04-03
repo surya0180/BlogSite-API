@@ -52,9 +52,9 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const body = req.body;
-        if (body.email !== undefined && body.uid !== undefined) {
+        if (body.email !== undefined && req.user.id !== undefined) {
             const response = await userService.updateUser(
-                body.uid,
+                req.user.id,
                 body.firstname,
                 body.lastname,
                 body.email,
@@ -83,9 +83,9 @@ const updateUser = async (req, res) => {
 const followUser = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined && body.follow_userId != undefined) {
+        if (req.user.id !== undefined && body.follow_userId != undefined) {
             const response = await userService.followUser(
-                body.userId,
+                req.user.id,
                 body.follow_userId
             );
             return res.status(200).json({
@@ -115,9 +115,9 @@ const followUser = async (req, res) => {
 const unfollowUser = async (req, res) => {
     try {
         const body = req.body;
-        if (body.userId !== undefined && body.follow_userId != undefined) {
+        if (req.user.id !== undefined && body.follow_userId != undefined) {
             const response = await userService.unfollowUser(
-                body.userId,
+                req.user.id,
                 body.follow_userId
             );
             return res.status(200).json({

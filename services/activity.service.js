@@ -1,4 +1,5 @@
 const activityRepo = require("../repositories/activity.repository");
+const userRepo = require("../repositories/user.repository");
 
 const getLikedContent = async (userId) => {
     try {
@@ -53,16 +54,17 @@ const addToLikedContent = async (contentType, contentId, userId) => {
                 errors: {},
             };
         }
-        const content = await activityRepo.addToLikedContent(
+        const activity = await activityRepo.addToLikedContent(
             contentType,
             contentId,
             userId,
             timestamp
         );
+        await userRepo.addToLiked(activity._id, userId);
         return {
             status: true,
             message: "Added to liked content successfully",
-            data: content,
+            data: activity,
             errors: {},
         };
     } catch (error) {
@@ -80,11 +82,16 @@ const removeFromLikedContent = async (contentType, contentId, userId) => {
                 errors: {},
             };
         }
+        const activityId = await activityRepo.getActivityIdByContentId(
+            userId,
+            contentId
+        );
         const content = await activityRepo.removeFromLikedContent(
             contentType,
             contentId,
             userId
         );
+        await userRepo.removeFromLiked(activityId);
         return {
             status: true,
             message: "Removed from liked content successfully",
@@ -107,16 +114,17 @@ const addToSavedContent = async (contentType, contentId, userId) => {
                 errors: {},
             };
         }
-        const content = await activityRepo.addToSavedContent(
+        const activity = await activityRepo.addToSavedContent(
             contentType,
             contentId,
             userId,
             timestamp
         );
+        await userRepo.addToSaved(activity._id);
         return {
             status: true,
             message: "Added to saved content successfully",
-            data: content,
+            data: activity,
             errors: {},
         };
     } catch (error) {
@@ -134,11 +142,16 @@ const removeFromSavedContent = async (contentType, contentId, userId) => {
                 errors: {},
             };
         }
+        const activityId = await activityRepo.getActivityIdByContentId(
+            userId,
+            contentId
+        );
         const content = await activityRepo.removeFromSavedContent(
             contentType,
             contentId,
             userId
         );
+        await userRepo.removeFromSaved(activityId);
         return {
             status: true,
             message: "Removed from saved content successfully",
@@ -167,6 +180,7 @@ const addToRecentActivity = async (contentType, contentId, userId) => {
             userId,
             timestamp
         );
+        await userRepo.addToRecents(content._id);
         return {
             status: true,
             message: "Added to recent activity successfully",
