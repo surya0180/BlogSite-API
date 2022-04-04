@@ -94,32 +94,36 @@ const deleteCommentInPost = async (postId, commentId) => {
 
 const addLikeToPost = async (userId, postId) => {
     return await Post.updateOne(
-        {_id: postId},
+        { _id: postId },
         {
             $addToSet: {
                 likes: userId,
-            }
+            },
         }
-    )
-}
+    );
+};
 
-const removeLikeToPost = async (userId, postId) => {
+const removeLikeFromPost = async (userId, postId) => {
     return await Post.updateOne(
-        {_id: postId},
+        { _id: postId },
         {
             $pull: {
                 likes: userId,
-            }
+            },
         }
-    )
-}
+    );
+};
+
+const postIsLiked = async (userId, postId) => {
+    return (await Post.find({ _id: postId, likes: userId }).count()) > 0;
+};
 
 const findNumberOfPages = async (limit) => {
     return Math.ceil((await Post.find()).length / limit);
 };
 
 const isPostId = async (postId) => {
-    return await Post.exists({ _id: postId });
+    return (await Post.find({ _id: postId }).count()) > 0;
 };
 
 module.exports = {
@@ -132,7 +136,8 @@ module.exports = {
     addCommentToPost,
     deleteCommentInPost,
     addLikeToPost,
-    removeLikeToPost,
+    removeLikeFromPost,
+    postIsLiked,
     findNumberOfPages,
     isPostId,
 };

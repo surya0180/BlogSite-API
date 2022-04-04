@@ -7,12 +7,6 @@ const activityController = require("../../../controllers/v1/activity.controller"
 const router = express.Router();
 
 router.get(
-    "/get_liked_content",
-    authMiddleware,
-    activityController.getLikedContent
-);
-
-router.get(
     "/get_saved_content",
     authMiddleware,
     activityController.getSavedContent
@@ -25,24 +19,12 @@ router.get(
 );
 
 router.post(
-    "/add_to_liked",
-    authMiddleware,
-    activityController.addToLikedContent
-);
-
-router.post(
-    "/remove_from_liked",
-    authMiddleware,
-    activityController.removeFromLikedContent
-);
-
-router.post(
     "/add_to_saved",
     authMiddleware,
     activityController.addToSavedContent
 );
 
-router.post(
+router.delete(
     "/remove_from_saved",
     authMiddleware,
     activityController.removeFromSavedContent
@@ -55,5 +37,3 @@ router.post(
 );
 
 module.exports = router;
-
-

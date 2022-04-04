@@ -1,9 +1,5 @@
 const Activity = require("../models/activity.model");
 
-const getLikedContent = async (userId) => {
-    return await Activity.find({ userId, type: "liked" });
-};
-
 const getSavedContent = async (userId, startIndex, limit) => {
     return await Activity.find({ userId, type: "saved" })
         .populate("forPosts")
@@ -24,18 +20,6 @@ const getActivityIdByContentId = async (userId, contentId) => {
     return (await Activity.findOne({ userId, contentId }))._id;
 };
 
-const addToLikedContent = async (contentType, contentId, userId, timestamp) => {
-    const activity = new Activity({
-        type: "liked",
-        userId,
-        activity_time: timestamp,
-        contentId,
-    })
-    return await activity.save()
-};
-const removeFromLikedContent = async (userId, contentId) => {
-    return await Activity.deleteOne({ userId, contentId, type: "liked" });
-};
 const addToSavedContent = async (contentType, contentId, userId, timestamp) => {
     return await Activity.updateOne(
         { userId, type: "saved" },
@@ -67,17 +51,10 @@ const addToRecentActivity = async (
     );
 };
 
-const isActivityExists = async (contentId, contentType, userId) => {
-    return await Activity.exists({contentId, userId, type: contentType})
-}
-
 module.exports = {
-    getLikedContent,
     getSavedContent,
     getRecentActivity,
     getActivityIdByContentId,
-    addToLikedContent,
-    removeFromLikedContent,
     addToSavedContent,
     removeFromSavedContent,
     addToRecentActivity,
