@@ -291,6 +291,22 @@ paths:
         "200":
           description: "Deleted the post succesfully"
 
+  /post/get_posts_by_userId/{userId}:
+        get:
+          summary: "Get other users post Details by their userId"
+          tags:
+            - "post"
+          parameters:
+            - in : path
+              name: userId
+              schema:
+                type: string
+              required: true
+          responses:
+              '200':
+                  description: "Fetched post details of the user"
+          
+
   /question/create_question:
     post:
       summary: "Create a Question"
