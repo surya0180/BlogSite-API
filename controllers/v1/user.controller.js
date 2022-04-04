@@ -4,10 +4,17 @@ const userService = require("../../services/user.service");
 const getUser = async (req, res) => {
     try {
         const user = await userRepo.findUserById(req.user.id);
+        const flr = await userRepo.findAllFollowers(user.followers);
+        const flg = await userRepo.findAllFollowing(user.following);
+        const finalUser = {
+            ...user._doc,
+            followers: flr,
+            following: flg,
+        };
         return res.json({
             status: true,
             message: "User found successfully",
-            data: user,
+            data: finalUser,
             errors: {},
         });
     } catch (err) {
@@ -22,9 +29,14 @@ const getUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        console.log(req.params.user_id);
         const userprofileid = await userRepo.findUserById(req.params.user_id);
-
+        const flr = await userRepo.findAllFollowers(userprofileid.followers);
+        const flg = await userRepo.findAllFollowing(userprofileid.following);
+        const finalUser = {
+            ...userprofileid._doc,
+            followers: flr,
+            following: flg,
+        };
         if (!userprofileid) {
             return res.status(400).json({
                 status: false,
@@ -36,7 +48,7 @@ const getUserById = async (req, res) => {
         return res.status(200).json({
             status: true,
             message: "User found successfully",
-            data: userprofileid,
+            data: finalUser,
             errors: {},
         });
     } catch (err) {
@@ -143,7 +155,7 @@ const unfollowUser = async (req, res) => {
     }
 };
 
-const removeFollower = (req, res) => {
+const removeFollower = async (req, res) => {
     try {
         const body = req.body;
         if (body.userId !== undefined && body.follow_userId !== undefined) {
