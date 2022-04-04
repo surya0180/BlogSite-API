@@ -74,8 +74,6 @@ paths:
         "200":
           description: "Fetched current user profile details"
 
-  #path for updating user details by using user id
-  #Should update this!!!!
   /user/update_user:
     post:
       summary: "Profile update endpoint: Updates the user details and returns appropriate status"
