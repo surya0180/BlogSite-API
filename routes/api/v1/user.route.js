@@ -13,5 +13,6 @@ router.get("/get_user/:user_id", authMiddleware, userController.getUserById);
 router.post("/update_user", authMiddleware, userController.updateUser);
 router.post("/follow_user", authMiddleware, userController.followUser);
 router.post("/unfollow_user", authMiddleware, userController.unfollowUser);
+router.post("/remove_follower", authMiddleware, userController.removeFollower);
 
 module.exports = router;

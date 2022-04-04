@@ -43,8 +43,17 @@ const unfollowUser = async (userId, follow_userId) => {
     }
 };
 
+const removeFollower = async (userId, follow_userId) => {
+    try {
+        return await userRepo.removeOwnFollower(userId, follow_userId);
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     updateUser,
     followUser,
     unfollowUser,
+    removeFollower,
 };

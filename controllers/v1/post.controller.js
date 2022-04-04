@@ -201,6 +201,38 @@ const getPostByPostId = async (req, res) => {
     }
 };
 
+const likeOrDislikeThePost = async (req, res) => {
+    try {
+        const body = req.body;
+        const userId = req.user.id;
+        if (
+            body.postId !== undefined &&
+            userId !== undefined &&
+            userId !== null
+        ) {
+            const response = await postService.likeOrDislikeThePost(
+                userId,
+                body.postId
+            );
+            return res.status(200).json(response);
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server error",
+            data: {},
+            errors: error.message,
+        });
+    }
+};
+
 module.exports = {
     createPost,
     updatePost,
@@ -209,4 +241,5 @@ module.exports = {
     getPostsByUserId,
     getPostByPostId,
     getPostsByOtherUserId,
+    likeOrDislikeThePost,
 };

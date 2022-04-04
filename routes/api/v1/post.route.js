@@ -14,5 +14,6 @@ router.get("/get_post/:postId", postController.getPostByPostId);
 router.post("/create_post", authMiddleware, postController.createPost);
 router.post("/update_post", authMiddleware, postController.updatePost);
 router.delete("/delete_post", authMiddleware, postController.deletePost);
+router.post("/like_post", authMiddleware, postController.likeOrDislikeThePost);
 
 module.exports = router;
