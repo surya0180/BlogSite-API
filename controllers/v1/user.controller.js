@@ -52,12 +52,11 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const body = req.body;
-        if (body.email !== undefined && req.user.id !== undefined) {
+        if (req.user.id !== undefined) {
             const response = await userService.updateUser(
                 req.user.id,
                 body.firstname,
                 body.lastname,
-                body.email,
                 body.bio,
                 body.genres
             );
@@ -127,7 +126,7 @@ const unfollowUser = async (req, res) => {
                 errors: {},
             });
         } else {
-            res.status(422).json({
+            return res.status(422).json({
                 status: false,
                 message: "Missing parameters",
                 data: {},
@@ -135,7 +134,36 @@ const unfollowUser = async (req, res) => {
             });
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
+            status: false,
+            message: "Internal Server Error",
+            data: {},
+            errors: error,
+        });
+    }
+};
+
+const removeFollower = (req, res) => {
+    try {
+        const body = req.body;
+        if (body.userId !== undefined && body.follow_userId !== undefined) {
+            await userService.removeFollower(body.userId, body.follow_userId);
+            return res.status(200).json({
+                status: true,
+                message: "Removed the follower successfully",
+                data: {},
+                errors: {},
+            });
+        } else {
+            return res.status(422).json({
+                status: false,
+                message: "Missing parameters",
+                data: {},
+                errors: {},
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
             status: false,
             message: "Internal Server Error",
             data: {},
@@ -150,4 +178,5 @@ module.exports = {
     updateUser,
     followUser,
     unfollowUser,
+    removeFollower,
 };

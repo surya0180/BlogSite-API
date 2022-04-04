@@ -3,20 +3,6 @@ const userRepo = require("../repositories/user.repository");
 const postRepo = require("../repositories/post.repository");
 const questionRepo = require("../repositories/question.repository");
 
-const getLikedContent = async (userId) => {
-    try {
-        const content = await activityRepo.getLikedContent(userId);
-        return {
-            status: true,
-            message: "Liked content fetched successfully",
-            data: content,
-            errors: {},
-        };
-    } catch (error) {
-        throw error;
-    }
-};
-
 const getSavedContent = async (userId, page, limit) => {
     try {
         const startIndex = (page - 1) * limit;
@@ -57,66 +43,6 @@ const getRecentActivity = async (userId) => {
         return {
             status: true,
             message: "Recent activity fetched successfully",
-            data: content,
-            errors: {},
-        };
-    } catch (error) {
-        throw error;
-    }
-};
-
-const addToLikedContent = async (contentType, contentId, userId) => {
-    try {
-        const timestamp = new Date();
-        if (contentType !== "post" || contentType !== "question") {
-            return {
-                status: false,
-                message: "Invalid content type provided",
-                data: {},
-                errors: {},
-            };
-        }
-        const activity = await activityRepo.addToLikedContent(
-            contentType,
-            contentId,
-            userId,
-            timestamp
-        );
-        await userRepo.addToLiked(activity._id, userId);
-        return {
-            status: true,
-            message: "Added to liked content successfully",
-            data: activity,
-            errors: {},
-        };
-    } catch (error) {
-        throw error;
-    }
-};
-
-const removeFromLikedContent = async (contentType, contentId, userId) => {
-    try {
-        if (contentType !== "post" || contentType !== "question") {
-            return {
-                status: false,
-                message: "Invalid content type provided",
-                data: {},
-                errors: {},
-            };
-        }
-        const activityId = await activityRepo.getActivityIdByContentId(
-            userId,
-            contentId
-        );
-        const content = await activityRepo.removeFromLikedContent(
-            contentType,
-            contentId,
-            userId
-        );
-        await userRepo.removeFromLiked(activityId);
-        return {
-            status: true,
-            message: "Removed from liked content successfully",
             data: content,
             errors: {},
         };
@@ -215,11 +141,8 @@ const addToRecentActivity = async (contentType, contentId, userId) => {
 };
 
 module.exports = {
-    getLikedContent,
     getSavedContent,
     getRecentActivity,
-    addToLikedContent,
-    removeFromLikedContent,
     addToSavedContent,
     removeFromSavedContent,
     addToRecentActivity,

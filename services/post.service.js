@@ -151,6 +151,29 @@ const getPostByPostId = async (postId) => {
     }
 };
 
+const likeOrDislikeThePost = async (userId, postId) => {
+    try {
+        const isLiked = await postRepo.postIsLiked(userId, postId);
+        console.log(isLiked, userId, postId);
+        let post, message;
+        if (isLiked) {
+            post = await postRepo.removeLikeFromPost(userId, postId);
+            message = "Disliked the post successfully";
+        } else {
+            post = await postRepo.addLikeToPost(userId, postId);
+            message = "Liked the post successfully";
+        }
+        return {
+            status: true,
+            message: message,
+            data: post,
+            errors: {},
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     createPost,
     updatePost,
@@ -158,4 +181,5 @@ module.exports = {
     getPosts,
     getPostsByUserId,
     getPostByPostId,
+    likeOrDislikeThePost,
 };

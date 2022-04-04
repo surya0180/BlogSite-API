@@ -66,14 +66,13 @@ const deleteQuestionIdFromUser = async (userId, questionId) => {
     );
 };
 
-const updateUserById = async (uid, firstname, lastname, email, bio, genres) => {
+const updateUserById = async (uid, firstname, lastname, bio, genres) => {
     return await User.updateOne(
         { _id: uid },
         {
             $set: {
                 firstname,
                 lastname,
-                email,
                 bio,
                 genres,
             },
@@ -174,6 +173,25 @@ const addToRecents = async (recentId, userId) => {
     );
 };
 
+const removeOwnFollower = async (userId, follow_userId) => {
+    await User.updateOne(
+        { _id: userId },
+        {
+            $pull: {
+                followers: follow_userId,
+            },
+        }
+    );
+    return await User.updateOne(
+        { _id: follow_userId },
+        {
+            $pull: {
+                followers: userId,
+            },
+        }
+    );
+};
+
 module.exports = {
     findUserByEmail,
     findUserById,
@@ -190,4 +208,5 @@ module.exports = {
     addToRecents,
     removeFromLiked,
     removeFromSaved,
+    removeOwnFollower,
 };

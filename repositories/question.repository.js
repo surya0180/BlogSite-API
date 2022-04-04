@@ -121,7 +121,7 @@ const findNumberOfPages = async (limit) => {
 };
 
 const isQuestionId = async (questionId) => {
-    return await Question.exists({ _id: questionId });
+    return (await Question.find({ _id: questionId }).count()) > 0;
 };
 
 module.exports = {

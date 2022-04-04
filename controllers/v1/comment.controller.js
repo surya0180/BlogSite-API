@@ -83,8 +83,8 @@ const editComment = async (req, res) => {
 const deleteComment = async (req, res) => {
     try {
         const body = req.body;
-        if (body.commentId !== undefined) {
-            const response = await commentService.deleteComment(body.commentId);
+        if (body.commentId !== undefined && body.postId !== undefined) {
+            const response = await commentService.deleteComment(body.commentId, body.postId);
             return res.status(200).json(response);
         } else {
             return res.status(422).json({
@@ -99,7 +99,7 @@ const deleteComment = async (req, res) => {
             status: false,
             message: "Internal server error",
             data: {},
-            errors: {},
+            errors: error.message,
         });
     }
 };

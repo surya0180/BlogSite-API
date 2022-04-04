@@ -1,6 +1,6 @@
 const userRepo = require("../repositories/user.repository");
 
-const updateUser = async (uid, firstname, lastname, email, bio, genres) => {
+const updateUser = async (uid, firstname, lastname, bio, genres) => {
     try {
         const user = await userRepo.findUserById(uid);
         if (!user) {
@@ -15,7 +15,6 @@ const updateUser = async (uid, firstname, lastname, email, bio, genres) => {
             uid,
             firstname,
             lastname,
-            email,
             bio,
             genres
         );
@@ -44,8 +43,17 @@ const unfollowUser = async (userId, follow_userId) => {
     }
 };
 
+const removeFollower = async (userId, follow_userId) => {
+    try {
+        return await userRepo.removeOwnFollower(userId, follow_userId);
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     updateUser,
     followUser,
     unfollowUser,
+    removeFollower,
 };
