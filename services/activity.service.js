@@ -13,18 +13,21 @@ const getSavedContent = async (userId, page, limit) => {
         );
         const saved = [];
 
-        savedActivity.forEach(async (activity) => {
+        for (const i in savedActivity) {
+            const activity = savedActivity[i];
             if (await postRepo.isPostId(activity.contentId)) {
-                const post = postRepo.findPostByPostId(activity.contentId);
+                const post = await postRepo.findPostByPostId(
+                    activity.contentId
+                );
                 saved.push(post);
             }
             if (await questionRepo.isQuestionId(activity.contentId)) {
-                const question = questionRepo.findQuestionByQuestionId(
+                const question = await questionRepo.findQuestionByQuestionId(
                     activity.contentId
                 );
-                saved.push(question);
             }
-        });
+            
+        }
 
         return {
             status: true,
@@ -85,7 +88,7 @@ const addToSavedContent = async (contentType, contentId, userId) => {
 
 const removeFromSavedContent = async (contentType, contentId, userId) => {
     try {
-        if (contentType !== "post" || contentType !== "question") {
+        if ((contentType !== "post") & (contentType !== "question")) {
             return {
                 status: false,
                 message: "Invalid content type provided",
@@ -120,7 +123,7 @@ const removeFromSavedContent = async (contentType, contentId, userId) => {
 const addToRecentActivity = async (contentType, contentId, userId) => {
     try {
         const timestamp = new Date();
-        if (contentType !== "post" || contentType !== "question") {
+        if (contentType !== "post" & contentType !== "question") {
             return {
                 status: false,
                 message: "Invalid content type provided",
