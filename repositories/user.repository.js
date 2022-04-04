@@ -8,6 +8,14 @@ const findUserById = async (id) => {
     return await User.findOne({ _id: id });
 };
 
+const findAllFollowers = async (followers) => {
+    return await User.find({ _id: { $in: followers } });
+};
+
+const findAllFollowing = async (following) => {
+    return await User.find({ _id: { $in: following } });
+};
+
 const addUser = async (firstname, lastname, email, password) => {
     try {
         const user = new User({
@@ -119,14 +127,16 @@ const removeFollower = async (userId, follow_userId) => {
 };
 
 const addToLiked = async (likedId, userId) => {
-    return await User.updateOne(
-        { _id: userId },
-        {
-            $addToSet: {
-                liked: likedId,
-            },
-        }
-    );
+    return await User.populate("forPosts")
+        .populate("forQuestions")
+        .updateOne(
+            { _id: userId },
+            {
+                $addToSet: {
+                    liked: likedId,
+                },
+            }
+        );
 };
 
 const removeFromLiked = async (likedId, userId) => {
@@ -186,7 +196,7 @@ const removeOwnFollower = async (userId, follow_userId) => {
         { _id: follow_userId },
         {
             $pull: {
-                followers: userId,
+                following: userId,
             },
         }
     );
@@ -209,4 +219,6 @@ module.exports = {
     removeFromLiked,
     removeFromSaved,
     removeOwnFollower,
+    findAllFollowers,
+    findAllFollowing,
 };

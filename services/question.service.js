@@ -129,6 +129,7 @@ const upVoteAQuestion = async (questionId, userId) => {
             questionId,
             userId
         );
+        await userRepo.addToLiked(questionId, userId);
         return {
             status: true,
             message: "Up voted user successfully",
@@ -145,6 +146,7 @@ const downVoteAQuestion = async (questionId, userId) => {
             questionId,
             userId
         );
+        await userRepo.removeFromLiked(questionId, userId);
         return {
             status: true,
             message: "Down voted user successfully",
